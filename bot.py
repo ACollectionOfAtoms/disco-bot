@@ -9,7 +9,7 @@ text_model = {}
 
 def should_talk():
     lucky_number = 1
-    roll = random.randint(1,10)
+    roll = random.randint(1,20)
     return roll == lucky_number
 
 @client.event
