@@ -23,6 +23,10 @@ async def on_ready():
 async def on_message(message):
     # TODO: See if there's a way to use `before` `after` and `around` 
     # of the `logs_from` method so messages are more random
+    if message.author == client.user:
+        # lmao don't invoke yourself m8
+        return
+
     if message.content.startswith('!bottalk'):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
