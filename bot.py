@@ -27,6 +27,16 @@ async def on_message(message):
         # lmao don't invoke yourself m8
         return
 
+    if str(client.user.id) in message.content:
+        sentences = ''
+        async for log in client.logs_from(message.channel, limit=2000):
+            sentences += log.content + '\n'
+        text_model = markovify.Text(sentences)
+        s = text_model.make_short_sentence(140)
+        if not s or not len(s) > 0:
+            s = "🤷"
+        await client.send_message(message.channel, s)
+
     if message.content.startswith('!bottalk'):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
