@@ -17,7 +17,16 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
+    await client.change_presence(game=discord.Game(name='Fortnite'))
     print('------')
+
+
+@client.event
+async def on_member_join(member):
+    server = member.server
+    fmt = 'Welcome {0.mention} to {1.name}!'
+    await client.send_message(server, fmt.format(member, server))
+
 
 @client.event
 async def on_message(message):
@@ -27,7 +36,10 @@ async def on_message(message):
         # lmao don't invoke yourself m8
         return
 
-    if str(client.user.id) in message.content:
+    if 'bot' in message.content:
+        await client.add_reaction(message, '👁️')
+
+    if client.user.mentioned_in(message):
         sentences = ''
         async for log in client.logs_from(message.channel, limit=2000):
             sentences += log.content + '\n'
@@ -35,6 +47,7 @@ async def on_message(message):
         s = text_model.make_short_sentence(140)
         if not s or not len(s) > 0:
             s = "🤷"
+        await client.add_reaction(message, '🤖')
         await client.send_message(message.channel, s)
 
     if message.content.startswith('!bottalk'):
