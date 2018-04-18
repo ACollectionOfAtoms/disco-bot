@@ -36,9 +36,6 @@ async def on_message(message):
         # lmao don't invoke yourself m8
         return
 
-    if 'bot' in message.content:
-        await client.add_reaction(message, '👁️')
-
     if client.user.mentioned_in(message):
         sentences = ''
         async for log in client.logs_from(message.channel, limit=2000):
