@@ -51,7 +51,7 @@ async def on_message(message):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
         sentences = ''
-        async for log in client.logs_from(message.channel, limit=2000):
+        async for log in client.logs_from(message.channel, limit=4000):
             if log.author.id == user_id:
                 sentences += log.content + '\n'
         if len(sentences) == 0:
