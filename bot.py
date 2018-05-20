@@ -6,9 +6,6 @@ import random
 import logging
 
 logging.basicConfig(level=logging.INFO)
-handler = logging.FileHandler(filename='/var/log/discord/discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
 
 client = discord.Client()
 text_model = {}
