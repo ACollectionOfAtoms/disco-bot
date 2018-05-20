@@ -44,8 +44,7 @@ async def on_message(message):
     if client.user.mentioned_in(message):
         try:
             sentences = u''
-            logs = client.logs_from(message.channel, limit=2000)
-            for log in logs:
+            async for log in client.logs_from(message.channel, limit=2000):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
@@ -62,9 +61,7 @@ async def on_message(message):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
         sentences = u''
-        logs = await client.logs_from(message.channel, limit=4000)
-        for log in logs:
-            if log.author.id == user_id:
+        async for log in client.logs_from(message.channel, limit=2000):
                 sentences += log.content + '\n'
         if len(sentences) == 0:
             await client.send_message(message.channel, "I got nothing 🤷")
@@ -83,8 +80,7 @@ async def on_message(message):
     if should_talk():
         try:
             sentences = u''
-            logs = await client.logs_from(message.channel, limit=2000)
-            for log in logs:
+            async for log in client.logs_from(message.channel, limit=2000):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
