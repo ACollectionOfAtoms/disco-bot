@@ -6,6 +6,7 @@ import random
 import logging
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 client = discord.Client()
 text_model = {}
@@ -52,7 +53,8 @@ async def on_message(message):
                 s = "🤷"
             await client.add_reaction(message, '🤖')
             await client.send_message(message.channel, s)
-        except Exception:
+        except Exception as e:
+            logger.error("Shat self: {}".format(e))           
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
             return
 
@@ -74,7 +76,8 @@ async def on_message(message):
                 s = "My apologies, I cannot quite grasp the essence of that user."
             await client.send_message(message.channel, s)
             return
-        except Exception:
+        except Exception as e:
+            logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
             return
     if should_talk():
@@ -88,7 +91,8 @@ async def on_message(message):
             if not s or not len(s) > 0:
                 s = "🤷"
             await client.send_message(message.channel, s)
-        except Exception:
+        except Exception as e:
+            logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
             return
 
