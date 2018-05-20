@@ -36,7 +36,7 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
-    for s in client.servers:
+    async for s in client.servers:
         logger.info('attempting to update roles for {}'.format(s))
         role = discord.utils.get(s.roles, name='Mr. Data')
         logger.info("found role {}".format(role))
