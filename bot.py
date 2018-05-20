@@ -30,10 +30,20 @@ def random_welcome_message():
     random_index = random.randint(0, len(messages))
     return messages[random_index]
 
+# async def create_gold_role(server):
+#     gold_name = 'Mr. Data Gold'
+#     if gold_name in [r.name for r in server.roles]:
+#         return
+#     fields = {
+
+#     }
+#     await client.add_role(server, )
 
 async def change_role_colour(server, role, colour):
     logger.info('Changing role {} at server {} with colour {}'.format(role, server, colour))
-    await client.edit_role(server, role, {'colour': colour})
+    logger.info('current color is {}'.format(role.color))
+    fields = {"colour": colour}
+    await client.edit_role(server, role, **fields)
 
 @client.event
 async def on_ready():
