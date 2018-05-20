@@ -36,9 +36,10 @@ async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
-    servers = client.servers
-    for s in servers:
+    for s in client.servers:
+        logger.info('attempting to update roles for {}'.format(s))
         role = discord.utils.get(s.roles, name='Mr. Data')
+        logger.info("found role {}".format(role))
         await client.edit_role(role, color=discord.Color.gold())
     await client.change_presence(game=discord.Game(name='The Oregon Trail'))
     print('------')
