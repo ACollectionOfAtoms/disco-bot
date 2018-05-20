@@ -44,8 +44,9 @@ async def on_message(message):
 
     if client.user.mentioned_in(message):
         try:
-            sentences = ''
-            async for log in client.logs_from(message.channel, limit=2000):
+            sentences = u''
+            logs = client.logs_from(message.channel, limit=2000)
+            for log in logs:
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
@@ -60,8 +61,9 @@ async def on_message(message):
     if message.content.startswith('!bottalk'):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
-        sentences = ''
-        async for log in client.logs_from(message.channel, limit=4000):
+        sentences = u''
+        logs = await client.logs_from(message.channel, limit=4000)
+        for log in logs:
             if log.author.id == user_id:
                 sentences += log.content + '\n'
         if len(sentences) == 0:
@@ -79,8 +81,9 @@ async def on_message(message):
             return
     if should_talk():
         try:
-            sentences = ''
-            async for log in client.logs_from(message.channel, limit=2000):
+            sentences = u''
+            logs = await client.logs_from(message.channel, limit=2000)
+            for log in logs:
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
