@@ -15,12 +15,13 @@ def should_talk():
     roll = random.randint(1,20)
     return roll == lucky_number
 
+
 @client.event
 async def on_ready():
     print('Logged in as')
     print(client.user.name)
     print(client.user.id)
-    await client.change_presence(game=discord.Game(name='Heroes of the Storm'))
+    await client.change_presence(game=discord.Game(name='The Oregon Trail'))
     print('------')
 
 
