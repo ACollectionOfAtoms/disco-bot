@@ -36,15 +36,20 @@ async def on_ready():
     logger.info('Logged in as')
     logger.info(client.user.name)
     logger.info(client.user.id)
+    role_changes = []
+    for s in client.servers:
+        logger.info('I am in {}'.format(s))
+        logger.info('attempting to update role...')
+        role = discord.utils.get(s.roles, name='Mr. Data')
+        logger.info('Found role {}'.format(role))
+        role_changes.append(client.edit_role(role, color=discord.Color.gold()))
+    asyncio.gather(*role_changes)
     await client.change_presence(game=discord.Game(name='The Oregon Trail'))
-    print('------')
 
 
 @client.event
 async def on_server_join(server):
     logger.info('Joined server: {}'. format(server))
-    role = discord.utils.get(s.roles, name='Mr. Data')
-    await client.edit_role(role, color=discord.Color.gold())
 
 
 @client.event
