@@ -32,7 +32,7 @@ def random_welcome_message():
 
 
 async def change_role_color(role, color):
-    logger.info('Changing role color...')
+    logger.info('Changing role {} with color {}'.format(role, color))
     await client.edit_role(role, color=color)
 
 @client.event
