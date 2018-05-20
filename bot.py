@@ -30,20 +30,28 @@ def random_welcome_message():
     random_index = random.randint(0, len(messages))
     return messages[random_index]
 
-# async def create_gold_role(server):
-#     gold_name = 'Mr. Data Gold'
-#     if gold_name in [r.name for r in server.roles]:
-#         return
-#     fields = {
+async def create_gold_role(server):
+    logger.info('Checking if gold role exists in {}'.format(server))
+    gold_name = 'Mr. Data Gold'
+    role_names = [r.name for r in server.roles]
+    top_role_index = len(role_names)
+    if gold_name in role_names:
+        logger.info("Gold role already available in {}.".format(server))
+        return
+    fields = {
+        "name": gold_name,
+        "colour": discord.Color.gold(),
+        "position": top_role_index + 1
+    }
+    logger.info('Creating gold role in {}'.format(server))
+    await client.create_role(server, **fields)
 
-#     }
-#     await client.add_role(server, )
 
-async def change_role_colour(server, role, colour):
-    logger.info('Changing role {} at server {} with colour {}'.format(role, server, colour))
-    logger.info('current color is {}'.format(role.color))
-    fields = {"colour": colour}
-    await client.edit_role(server, role, **fields)
+async def change_role_colour(server):
+    await create_gold_role(server)
+    role = discord.utils.get(server.roles, name='Mr. Data Gold')
+    logger.info('Found gold role, trying to add... server: {}'.format(server))
+    await server.add_roles(server.me, [role])
 
 @client.event
 async def on_ready():
@@ -51,13 +59,14 @@ async def on_ready():
     logger.info(client.user.name)
     logger.info(client.user.id)
     coroutines = []
-    for s in client.servers:
-        logger.info('I am in {}'.format(s))
-        logger.info('attempting to update role...')
-        role = discord.utils.get(s.roles, name='Mr. Data')
-        logger.info('Found role {}'.format(role))
-        coroutines.append(change_role_colour(s, role, discord.Colour.gold()))
-    coroutines.append(client.change_presence(game=discord.Game(name='The Oregon Trail')))
+    try:
+        for s in client.servers:
+            logger.info('I am in {}'.format(s))
+            logger.info('attempting to update role...')
+            coroutines.append(change_role_colour(s))
+        coroutines.append(client.change_presence(game=discord.Game(name='The Oregon Trail')))
+    except Exception as e:
+        logger.exception(e)
     await asyncio.gather(*coroutines)
 
 
