@@ -17,14 +17,6 @@ def should_talk():
     return roll == lucky_number
 
 
-@client.event
-async def on_ready():
-    print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
-    await client.change_presence(game=discord.Game(name='The Oregon Trail'))
-    print('------')
-
 def random_welcome_message():
     messages = [
         'Did you know that life is meaningless?',
@@ -37,6 +29,20 @@ def random_welcome_message():
     ]
     random_index = random.randint(0, len(messages))
     return messages[random_index]
+
+
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    servers = client.servers
+    for s in servers:
+        role = discord.utils.get(s.roles, name='Mr. Data')
+        await client.edit_role(role, color=discord.Color.gold())
+    await client.change_presence(game=discord.Game(name='The Oregon Trail'))
+    print('------')
+
 
 @client.event
 async def on_member_join(member):
