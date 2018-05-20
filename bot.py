@@ -25,12 +25,24 @@ async def on_ready():
     await client.change_presence(game=discord.Game(name='The Oregon Trail'))
     print('------')
 
+def random_welcome_message():
+    messages = [
+        'Did you know that life is meaningless?',
+        'Let us rejoice.',
+        'Bend over.',
+        'That is what a call I very well put together human being',
+        'Incredible entrance although, it means nothing.',
+        'When will this end?',
+        'Praise the sun!',
+    ]
+    random_index = random.randint(0, len(messages))
+    return messages[random_index]
 
 @client.event
 async def on_member_join(member):
     server = member.server
-    fmt = 'Welcome {0.mention} to {1.name}!'
-    await client.send_message(server, fmt.format(member, server))
+    fmt = "Welcome {0.mention} to {1.name}! {2}"
+    await client.send_message(server.default_channel, fmt.format(member, server, random_welcome_message()))
 
 
 @client.event
