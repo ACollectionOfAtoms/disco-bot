@@ -31,9 +31,9 @@ def random_welcome_message():
     return messages[random_index]
 
 
-async def change_role_color(server, role, color):
-    logger.info('Changing role {} at server {} with color {}'.format(role, server, color))
-    await client.edit_role(server, role, {'color': color})
+async def change_role_colour(server, role, colour):
+    logger.info('Changing role {} at server {} with colour {}'.format(role, server, colour))
+    await client.edit_role(server, role, {'colour': colour})
 
 @client.event
 async def on_ready():
@@ -46,7 +46,7 @@ async def on_ready():
         logger.info('attempting to update role...')
         role = discord.utils.get(s.roles, name='Mr. Data')
         logger.info('Found role {}'.format(role))
-        coroutines.append(change_role_color(s, role, discord.Colour.gold()))
+        coroutines.append(change_role_colour(s, role, discord.Colour.gold()))
     coroutines.append(client.change_presence(game=discord.Game(name='The Oregon Trail')))
     await asyncio.gather(*coroutines)
 
