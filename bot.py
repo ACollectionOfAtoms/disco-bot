@@ -89,9 +89,13 @@ async def on_server_join(server):
 
 @client.event
 async def on_member_join(member):
-    server = member.server
-    fmt = "Welcome {0.mention} to {1.name}! {2}"
-    await client.send_message(server.default_channel, fmt.format(member, server, random_welcome_message()))
+    try:
+        logger.info('A member joined')
+        server = member.server
+        fmt = "Welcome to {0.name}! {1}"
+        await client.send_message(server, fmt.format(server, random_welcome_message()))
+    except Exception as e:
+        logger.exception(e)
 
 
 @client.event
