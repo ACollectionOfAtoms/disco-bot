@@ -34,24 +34,36 @@ async def create_gold_role(server):
     logger.info('Checking if gold role exists in {}'.format(server))
     gold_name = 'Mr. Data Gold'
     role_names = [r.name for r in server.roles]
-    top_role_index = len(role_names)
+    top_role_index = len(role_names) + 1
     if gold_name in role_names:
         logger.info("Gold role already available in {}.".format(server))
         return
     fields = {
         "name": gold_name,
         "colour": discord.Color.gold(),
-        "position": top_role_index + 1
+        "position": top_role_index
     }
     logger.info('Creating gold role in {}'.format(server))
     await client.create_role(server, **fields)
+    return top_role_index
+
+
+async def set_gold_role_to_top(server, role, position):
+    logger.info('setting gold role to top for server {}'.format(server))
+    client.edit_role(server, role, position=position)
 
 
 async def change_role_colour(server):
-    await create_gold_role(server)
+    top_index = await create_gold_role(server)
     role = discord.utils.get(server.roles, name='Mr. Data Gold')
-    logger.info('Found gold role, trying to add... server: {}'.format(server))
-    await server.add_roles(server.me, [role])
+    logger.info('Found gold role, trying to add to self at server: {}'.format(server))
+    try:
+        await client.add_roles(server.me, role)
+    except Exception as e:
+        logger.exception(e)
+    logger.info('Succesfully added role')
+    await set_gold_role_to_top(server, role, top_index)
+    logger.info('succesfully set gold role to top')
 
 @client.event
 async def on_ready():
