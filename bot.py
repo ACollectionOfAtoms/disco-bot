@@ -3,6 +3,7 @@ import discord
 import asyncio
 import markovify
 import random
+import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -161,4 +162,17 @@ async def on_message(message):
         await asyncio.sleep(5)
         await client.send_message(message.channel, 'Done sleeping')
 
-client.run(os.environ['DISCO_TOKEN'])
+
+def run_bot(attempt=0, max_retries=5):
+    attempt += 1
+    if attempt < max_retries:
+        try:
+            client.run(os.environ['DISCO_TOKEN'])
+        except Exception as e:
+            logger.exception('Something went wrong!')
+            time.sleep(5)
+            run_bot(attempt)
+    else:
+        logger.error('Max retries met! Shutting down...')
+
+run_bot()
