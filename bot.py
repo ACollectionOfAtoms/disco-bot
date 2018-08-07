@@ -108,7 +108,7 @@ async def on_message(message):
         return
 
     if message.content.startswith('!topic'):
-        await client.send_message(message.topic)
+        await client.send_message(message.channel.topic)
         return
 
     if client.user.mentioned_in(message):
