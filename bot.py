@@ -107,6 +107,10 @@ async def on_message(message):
         # lmao don't invoke yourself m8
         return
 
+    if message.content.startswith('!topic'):
+        await client.send_message(message.topic)
+        return
+
     if client.user.mentioned_in(message):
         try:
             sentences = u''
