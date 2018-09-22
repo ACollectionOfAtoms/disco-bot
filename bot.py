@@ -155,7 +155,7 @@ async def on_message(message):
         user_id = ''.join([c for c in user_id if c.isdigit()])
         sentences = u''
         logger.info('looking up user {} for bottalk command'.format(user_id))
-        user = client.get_user_info(user_id)
+        user = await client.get_user_info(user_id)
         logger.info('found user {} for bottalk command'.format(user))
         async for log in client.logs_from(message.channel, limit=2000):
             if log.author == user:
