@@ -154,7 +154,7 @@ async def on_message(message):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
         sentences = u''
-        logs = yield from client.logs_from(message.channel, limit=2000)
+        logs = await client.logs_from(message.channel, limit=2000)
         user = client.get_user_info(user_id)
         for message in logs:
             if message.author == user:
