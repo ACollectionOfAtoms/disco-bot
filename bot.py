@@ -154,7 +154,10 @@ async def on_message(message):
         user_id = message.content.split()[1]
         user_id = ''.join([c for c in user_id if c.isdigit()])
         sentences = u''
-        async for log in client.logs_from(message.channel, limit=2000):
+        logs = yield from client.logs_from(message.channel, limit=2000)
+        user = client.get_user_info(user_id)
+        for message in logs:
+            if message.author == user:
                 sentences += log.content + '\n'
         if len(sentences) == 0:
             await client.send_message(message.channel, "I got nothing 🤷")
