@@ -157,7 +157,7 @@ async def on_message(message):
         logger.info('looking up user {} for bottalk command'.format(user_id))
         user = await client.get_user_info(user_id)
         logger.info('found user {} for bottalk command'.format(user))
-        async for log in client.logs_from(message.channel, limit=2000):
+        async for log in client.logs_from(message.channel, limit=5000):
             if log.author == user:
                 sentences += log.content + '\n'
         if len(sentences) == 0:
