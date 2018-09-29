@@ -29,6 +29,8 @@ NIETZSCHE_QUOTES = [
     "The pure soul is a pure lie.",
     "That for which we find words is something already dead in our hearts",
     "I have forgotten my umbrella.",
+    "God is dead! God remains dead! And we have killed him.",
+    "Which is it: is man one of God's blunders, or is God one of man's blunders?"
 ]
 
 def should_talk():
@@ -127,7 +129,7 @@ async def on_message(message):
         return
     
     if message.content.startswith('!neechee'):
-        quote = NIETZSCHE_QUOTES[random.randint(0, len(NIETZSCHE_QUOTES))]
+        quote = NIETZSCHE_QUOTES[random.randint(0, len(NIETZSCHE_QUOTES) - 1)]
         await client.send_message(message.channel, quote)
 
     if message.content.startswith('!topic'):
