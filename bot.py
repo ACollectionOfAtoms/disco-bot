@@ -120,12 +120,16 @@ async def on_member_join(member):
     except Exception as e:
         logger.exception(e)
 
+
 def random_float(float_a, float_b):
     return random.uniform(float_a, float_b)
 
-# Return a random datetime for a given channel
-# within the range of NOW, and channel creation
+
 def random_date(channel):
+    """
+    Return a random datetime for a given channel
+    within the range of datetime.now(), and channel creation
+    """
     min_date = channel.created_at.timestamp()
     max_date = datetime.datetime.now().timestamp()
     random_timestamp = random_float(min_date, max_date)
