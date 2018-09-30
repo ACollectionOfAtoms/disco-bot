@@ -152,7 +152,7 @@ async def on_message(message):
         try:
             sentences = u''
             random_dt = random_date(message.channel)
-            async for log in client.logs_from(message.channel, limit=2000, around=random_dt):
+            async for log in client.logs_from(message.channel, limit=101, around=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
@@ -193,7 +193,7 @@ async def on_message(message):
         try:
             sentences = u''
             random_dt = random_date(message.channel)
-            async for log in client.logs_from(message.channel, limit=2000, around=random_dt):
+            async for log in client.logs_from(message.channel, limit=101, around=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
