@@ -148,7 +148,6 @@ async def on_message(message):
 
     if message.content.startswith('!topic'):
         await client.send_message(message.channel, message.channel.topic)
-        return
 
     if client.user.mentioned_in(message):
         try:
@@ -165,7 +164,6 @@ async def on_message(message):
         except Exception as e:
             logger.error("Shat self: {}".format(e))           
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-            return
 
     if message.content.startswith('!bottalk'):
         user_id = message.content.split()[1]
@@ -179,18 +177,16 @@ async def on_message(message):
                 sentences += log.content + '\n'
         if len(sentences) == 0:
             await client.send_message(message.channel, "I got nothing 🤷")
-            return
         try:
             text_model = markovify.Text(sentences)
             s = text_model.make_sentence(tries=50)
             if not s or len(s) < 1:
                 s = "My apologies, I cannot quite grasp the essence of that user."
             await client.send_message(message.channel, s)
-            return
         except Exception as e:
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-            return
+
     if should_talk():
         try:
             sentences = u''
@@ -205,8 +201,6 @@ async def on_message(message):
         except Exception as e:
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-            return
-
     elif message.content.startswith('!sleep'):
         await asyncio.sleep(5)
         await client.send_message(message.channel, 'Done sleeping')
