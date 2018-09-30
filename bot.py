@@ -99,7 +99,7 @@ async def on_ready():
             logger.info('I am in {}'.format(s))
             logger.info('attempting to update role...')
             coroutines.append(change_role_colour(s))
-        coroutines.append(client.change_presence(game=discord.Game(name='The Oregon Trail')))
+        coroutines.append(client.change_presence(game=discord.Game(name='Blackwake')))
     except Exception as e:
         logger.exception(e)
     await asyncio.gather(*coroutines)
