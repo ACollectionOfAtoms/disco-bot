@@ -5,6 +5,7 @@ import markovify
 import random
 import time
 import logging
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -119,6 +120,17 @@ async def on_member_join(member):
     except Exception as e:
         logger.exception(e)
 
+def random_float(float_a, float_b):
+    return random.uniform(float_a, float_b)
+
+# Return a random datetime for a given channel
+# within the range of NOW, and channel creation
+def random_date(channel):
+    min_date = channel.created_at.timestamp()
+    max_date = datetime.datetime.now().timestamp()
+    random_timestamp = random_float(min_date, max_date)
+    return datetime.datetime.utcfromtimestamp(random_timestamp)
+
 
 @client.event
 async def on_message(message):
@@ -139,7 +151,8 @@ async def on_message(message):
     if client.user.mentioned_in(message):
         try:
             sentences = u''
-            async for log in client.logs_from(message.channel, limit=2000):
+            random_dt = random_date(message.channel)
+            async for log in client.logs_from(message.channel, limit=2000, around=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
@@ -179,7 +192,8 @@ async def on_message(message):
     if should_talk():
         try:
             sentences = u''
-            async for log in client.logs_from(message.channel, limit=2000):
+            random_dt = random_date(message.channel)
+            async for log in client.logs_from(message.channel, limit=2000, around=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
             s = text_model.make_short_sentence(140)
