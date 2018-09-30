@@ -156,7 +156,7 @@ async def on_message(message):
             async for log in client.logs_from(message.channel, limit=2000, after=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
-            s = text_model.make_short_sentence(280)
+            s = text_model.make_short_sentence(280, tries=20)
             if not s or not len(s) > 0:
                 s = "🤷"
             await client.add_reaction(message, '🤖')
@@ -194,7 +194,7 @@ async def on_message(message):
             async for log in client.logs_from(message.channel, limit=2000, after=random_dt):
                 sentences += log.content + '\n'
             text_model = markovify.Text(sentences)
-            s = text_model.make_short_sentence(280)
+            s = text_model.make_short_sentence(280, tries=20)
             if not s or not len(s) > 0:
                 s = "🤷"
             await client.send_message(message.channel, s)
