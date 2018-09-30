@@ -201,10 +201,6 @@ async def on_message(message):
         except Exception as e:
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-    elif message.content.startswith('!sleep'):
-        await asyncio.sleep(5)
-        await client.send_message(message.channel, 'Done sleeping')
-
 
 def run_bot(attempt=0, max_retries=5):
     attempt += 1
