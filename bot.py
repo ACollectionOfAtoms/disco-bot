@@ -180,14 +180,17 @@ async def on_message(message):
         try:
             zip_code = message.content.split()[1]
         except IndexError:
-            await client.send_message(message.channel, "I need a zip code.")
+            await client.send_message(message.channel, "I need an american zip code.")
+            return
+        if not zip_code.isdigit():
+            await client.send_message(message.channel, "That does not look like a zip code!")
             return
         try:
             response = get_weather_response(zip_code)
         except Exception as e:
             logger.exception(e)
             logger.info('Could not get weather data!')
-            await client.send_message(message.channel, "Somethings not right...")
+            await client.send_message(message.channel, "Somethings not right...I need an american zip code.")
             return
 
         parsed_response = parse_weather_response(response)
