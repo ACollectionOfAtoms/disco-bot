@@ -6,6 +6,8 @@ import random
 import time
 import logging
 import datetime
+import aiohttp
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -135,13 +137,66 @@ def random_date(channel):
     random_timestamp = random_float(min_date, max_date)
     return datetime.datetime.utcfromtimestamp(random_timestamp)
 
+async def fetch(session, url):
+    async with session.get(url) as response:
+        if response.status != 200:
+            raise Exception('Failed to fetch')
+        return await response.json()
 
+async def get_weather_response(zip_code):
+    async with aiohttp.ClientSession() as session:
+        uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
+        return await fetch(session, uri)
+
+def k_to_f(kelvin):
+    # convert kelvin to farenheit
+    return round(kelvin * 9/5 - 459.67, 2)
+
+def parse_weather_response(json_dict):
+    place_name = json_dict['name']
+    weather_objs = json_dict['weather']
+    descriptions = [wo['description'] for wo in weather_objs]
+    description_string = ', '.join(descriptions)
+    current_temp = json_dict['main']['temp']
+    high_temp = json_dict['main']['temp_max']
+    low_temp = json_dict['main']['temp_min']
+    parsed_data = {
+        "name": place_name,
+        "description": description_string,
+        "current_temp": k_to_f(current_temp),
+        "high_temp": k_to_f(high_temp),
+        "low_temp": k_to_f(low_temp)
+    }
+    weather_string = "{name}, {description}. Currently {current_temp}F with highs of {high_temp}F and lows of {low_temp}F.".format(**parsed_data)
+
+
+WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
+WEATHER_URI = 'http://api.openweathermap.org/data/2.5/weather'
+WEATHER_ENDPOINT = WEATHER_URI + '?appid=' + WEATHER_API_KEY
 @client.event
 async def on_message(message):
+    # TODO: replace blocks after if statements with function calls
     if message.author == client.user:
         # lmao don't invoke yourself m8
         return
-    
+
+    if message.content.startswith('!weather'):
+        try:
+            zip_code = message.content.split()[1]
+        except IndexError:
+            await client.send_message(message.channel, "I need a zip code.")
+            return
+        try:
+            response = await get_weather_response(zip_code)
+        except Exception as e:
+            logger.exception(e)
+            logger.info('Could not get weather data!')
+            await client.send_message(message.channel, "Somethings not right...")
+            return
+
+        parsed_response = parse_weather_response(details)
+        await client.send_message(message.channel, parsed_response)
+
     if message.content.startswith('!neechee'):
         quote = NIETZSCHE_QUOTES[random.randint(0, len(NIETZSCHE_QUOTES) - 1)]
         await client.send_message(message.channel, quote)
