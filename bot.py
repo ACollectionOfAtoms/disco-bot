@@ -6,8 +6,7 @@ import random
 import time
 import logging
 import datetime
-import aiohttp
-import json
+import requests
 
 
 logging.basicConfig(level=logging.INFO)
@@ -138,23 +137,11 @@ def random_date(channel):
     random_timestamp = random_float(min_date, max_date)
     return datetime.datetime.utcfromtimestamp(random_timestamp)
 
-async def fetch(session, url):
-    async with session.get(url) as response:
-        logger.info("Attempting to fetch at URL {}".format(url))
-        if response.status != 200:
-            raise Exception('Failed to fetch')
-        text_res = await response.text()
-        json_res = json.loads(text_res)
-        return response.text()
-
-async def get_weather_response(zip_code):
-    async with aiohttp.ClientSession() as session:
-        logger.info("fetching weather data...")
-        uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
-        uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
-        res = await fetch(session, uri)
-        logger.info('got response for weather {}', res)
-        return res
+def get_weather_response(zip_code):
+    uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
+    uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
+    resp = requests.get(uri)
+    return resp.json()
 
 def k_to_f(kelvin):
     # convert kelvin to farenheit

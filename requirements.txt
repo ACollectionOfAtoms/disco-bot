@@ -13,3 +13,4 @@ six==1.11.0
 Unidecode==1.0.22
 websockets==3.4
 wrapt==1.10.11
+requests==2.19.1
