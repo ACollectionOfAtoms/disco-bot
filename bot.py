@@ -7,6 +7,7 @@ import time
 import logging
 import datetime
 import aiohttp
+import json
 
 
 logging.basicConfig(level=logging.INFO)
@@ -142,7 +143,9 @@ async def fetch(session, url):
         logger.info("Attempting to fetch at URL {}".format(url))
         if response.status != 200:
             raise Exception('Failed to fetch')
-        return await response.json()
+        text_res = await response.text()
+        json_res = json.loads(text_res)
+        return response.text()
 
 async def get_weather_response(zip_code):
     async with aiohttp.ClientSession() as session:
@@ -173,6 +176,7 @@ def parse_weather_response(json_dict):
         "low_temp": k_to_f(low_temp)
     }
     weather_string = "{name}, {description}. Currently {current_temp}F with highs of {high_temp}F and lows of {low_temp}F.".format(**parsed_data)
+    return weather_string
 
 
 WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
