@@ -183,7 +183,7 @@ async def on_message(message):
             await client.send_message(message.channel, "I need a zip code.")
             return
         try:
-            response = await get_weather_response(zip_code)
+            response = get_weather_response(zip_code)
         except Exception as e:
             logger.exception(e)
             logger.info('Could not get weather data!')
