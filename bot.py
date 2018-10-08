@@ -162,7 +162,7 @@ def parse_weather_response(json_dict):
         "high_temp": k_to_f(high_temp),
         "low_temp": k_to_f(low_temp)
     }
-    weather_string = "{name}: {description}. **Currently** {current_temp} °F with **highs** of {high_temp} °F and **lows** of {low_temp} °F.".format(**parsed_data)
+    weather_string = "**{name}**: {description}. *Currently* {current_temp} °F with *highs* of {high_temp} °F and *lows* of {low_temp} °F.".format(**parsed_data)
     return weather_string
 
 
