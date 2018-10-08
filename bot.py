@@ -149,7 +149,7 @@ async def get_weather_response(zip_code):
         logger.info("fetching weather data...")
         uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
         uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
-        res = await fetch(session, url)
+        res = await fetch(session, uri)
         logger.info('got response for weather {}', res)
         return res
 
