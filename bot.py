@@ -146,9 +146,12 @@ async def fetch(session, url):
 
 async def get_weather_response(zip_code):
     async with aiohttp.ClientSession() as session:
+        logger.info("fetching weather data...")
         uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
         uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
-        return await fetch(session, uri)
+        res = await fetch(session, url)
+        logger.info('got response for weather {}', res)
+        return res
 
 def k_to_f(kelvin):
     # convert kelvin to farenheit
@@ -196,7 +199,7 @@ async def on_message(message):
             await client.send_message(message.channel, "Somethings not right...")
             return
 
-        parsed_response = parse_weather_response(details)
+        parsed_response = parse_weather_response(response)
         await client.send_message(message.channel, parsed_response)
 
     if message.content.startswith('!neechee'):
