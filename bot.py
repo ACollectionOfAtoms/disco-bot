@@ -145,7 +145,7 @@ def get_weather_response(zip_code):
 
 def k_to_f(kelvin):
     # convert kelvin to farenheit
-    return round(kelvin * 9/5 - 459.67, 2)
+    return round(kelvin * 9/5 - 459.67)
 
 def parse_weather_response(json_dict):
     place_name = json_dict['name']
@@ -162,7 +162,7 @@ def parse_weather_response(json_dict):
         "high_temp": k_to_f(high_temp),
         "low_temp": k_to_f(low_temp)
     }
-    weather_string = "{name}, {description}. Currently {current_temp}F with highs of {high_temp}F and lows of {low_temp}F.".format(**parsed_data)
+    weather_string = "{name}: {description}. **Currently** {current_temp} °F with **highs** of {high_temp} °F and **lows** of {low_temp} °F.".format(**parsed_data)
     return weather_string
 
 
