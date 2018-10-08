@@ -139,6 +139,7 @@ def random_date(channel):
 
 async def fetch(session, url):
     async with session.get(url) as response:
+        logger.info("Attempting to fetch at URL {}".format(url))
         if response.status != 200:
             raise Exception('Failed to fetch')
         return await response.json()
@@ -146,6 +147,7 @@ async def fetch(session, url):
 async def get_weather_response(zip_code):
     async with aiohttp.ClientSession() as session:
         uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
+        uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
         return await fetch(session, uri)
 
 def k_to_f(kelvin):
@@ -172,7 +174,7 @@ def parse_weather_response(json_dict):
 
 WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
 WEATHER_URI = 'http://api.openweathermap.org/data/2.5/weather'
-WEATHER_ENDPOINT = WEATHER_URI + '?appid=' + WEATHER_API_KEY
+WEATHER_ENDPOINT = "{}?appid={}".format(WEATHER_URI, WEATHER_API_KEY)
 @client.event
 async def on_message(message):
     # TODO: replace blocks after if statements with function calls
