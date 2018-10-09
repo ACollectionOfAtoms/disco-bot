@@ -258,5 +258,6 @@ async def on_message(message):
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
 
+# TODO: Add message to alert a user on start/restart
 logger.info('Starting up!')
 client.run(os.environ['DISCO_TOKEN'])
