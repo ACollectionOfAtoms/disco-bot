@@ -258,18 +258,5 @@ async def on_message(message):
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
 
-def run_bot(attempt=0, max_retries=5):
-    attempt += 1
-    if attempt < max_retries:
-        try:
-            logger.info('starting up!')
-            client.run(os.environ['DISCO_TOKEN'])
-        except Exception as e:
-            logger.info('DEATH! {}'.format(e))
-            logger.exception('Something went wrong! {}'.fromat(e))
-            time.sleep(5)
-            run_bot(attempt)
-    else:
-        logger.error('Max retries met! Shutting down...')
-
-run_bot()
+logger.info('Starting up!')
+client.run(os.environ['DISCO_TOKEN'])
