@@ -147,7 +147,13 @@ def k_to_f(kelvin):
     # convert kelvin to farenheit
     return round(kelvin * 9/5 - 459.67)
 
+def hour_time_from_timestamp(timestamp):
+    d = datetime.datetime.fromtimestamp(timestamp)
+    return d.strftime('%I:%M %p')
+
 def parse_weather_response(json_dict):
+    timestamp = json_dict['dt']
+    hour = hour_time_from_timestamp(timestamp)
     place_name = json_dict['name']
     weather_objs = json_dict['weather']
     descriptions = [wo['description'] for wo in weather_objs]
@@ -157,12 +163,13 @@ def parse_weather_response(json_dict):
     low_temp = json_dict['main']['temp_min']
     parsed_data = {
         "name": place_name,
+        "hour": hour,
         "description": description_string,
         "current_temp": k_to_f(current_temp),
         "high_temp": k_to_f(high_temp),
         "low_temp": k_to_f(low_temp)
     }
-    weather_string = "**{name}**: {description}. *Currently* {current_temp} °F with *highs* of {high_temp} °F and *lows* of {low_temp} °F.".format(**parsed_data)
+    weather_string = "**{name}** ({hour}): {description}. *Currently* {current_temp} °F with *highs* of {high_temp} °F and *lows* of {low_temp} °F.".format(**parsed_data)
     return weather_string
 
 
