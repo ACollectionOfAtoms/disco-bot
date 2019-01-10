@@ -6,35 +6,15 @@ import random
 import time
 import logging
 import datetime
-import requests
 
+from lib import nietzsche
+from lib import weather
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 client = discord.Client()
 text_model = {}
-
-NIETZSCHE_QUOTES = [
-    "That which does not kill us makes us stronger.",
-    "He who fights with monsters might take care lest he thereby become a monster. And if you gaze for long into an abyss, the abyss gazes also into you.",
-    "Without music, life would be a mistake.",
-    "There are no facts, only interpretations.",
-    "The man of knowledge must be able not only to love his enemies but also to hate his friends.",
-    "We should consider every day lost on which we have not danced at least once.",
-    "Man is the cruelest animal.",
-    "Is man merely a mistake of God's? Or God merely a mistake of man?",
-    "The thought of suicide is a great consolation: by means of it one gets through many a dark night.",
-    "Be careful, lest in casting out your demon you exorcise the best thing in you.",
-    "A good writer possesses not only his own spirit but also the spirit of his friends.",
-    "Art is the proper task of life.",
-    "What does your conscience say? — 'You should become the person you are'.",
-    "The pure soul is a pure lie.",
-    "That for which we find words is something already dead in our hearts",
-    "I have forgotten my umbrella.",
-    "God is dead! God remains dead! And we have killed him.",
-    "Which is it: is man one of God's blunders, or is God one of man's blunders?"
-]
 
 def should_talk():
     lucky_number = 1
@@ -137,38 +117,6 @@ def random_date(channel):
     random_timestamp = random_float(min_date, max_date)
     return datetime.datetime.utcfromtimestamp(random_timestamp)
 
-def get_weather_response(zip_code):
-    uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
-    uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
-    resp = requests.get(uri)
-    return resp.json()
-
-def k_to_f(kelvin):
-    # convert kelvin to farenheit
-    return round(kelvin * 9/5 - 459.67)
-
-def parse_weather_response(json_dict):
-    place_name = json_dict['name']
-    weather_objs = json_dict['weather']
-    descriptions = [wo['description'] for wo in weather_objs]
-    description_string = ', '.join(descriptions)
-    current_temp = json_dict['main']['temp']
-    high_temp = json_dict['main']['temp_max']
-    low_temp = json_dict['main']['temp_min']
-    parsed_data = {
-        "name": place_name,
-        "description": description_string,
-        "current_temp": k_to_f(current_temp),
-        "high_temp": k_to_f(high_temp),
-        "low_temp": k_to_f(low_temp)
-    }
-    weather_string = "**{name}**: {description}. *Currently* {current_temp} °F with *highs* of {high_temp} °F and *lows* of {low_temp} °F.".format(**parsed_data)
-    return weather_string
-
-
-WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
-WEATHER_URI = 'http://api.openweathermap.org/data/2.5/weather'
-WEATHER_ENDPOINT = "{}?appid={}".format(WEATHER_URI, WEATHER_API_KEY)
 @client.event
 async def on_message(message):
     # TODO: replace blocks after if statements with function calls
@@ -186,18 +134,18 @@ async def on_message(message):
             await client.send_message(message.channel, "That does not look like a zip code!")
             return
         try:
-            response = get_weather_response(zip_code)
+            response = weather.get_weather_response(zip_code)
         except Exception as e:
             logger.exception(e)
             logger.info('Could not get weather data!')
             await client.send_message(message.channel, "Somethings not right...I need an american zip code.")
             return
 
-        parsed_response = parse_weather_response(response)
+        parsed_response = weather.parse_weather_response(response)
         await client.send_message(message.channel, parsed_response)
 
     if message.content.startswith('!neechee'):
-        quote = NIETZSCHE_QUOTES[random.randint(0, len(NIETZSCHE_QUOTES) - 1)]
+        quote = nietzsche.QUOTES[random.randint(0, len(nietzsche.QUOTES) - 1)]
         await client.send_message(message.channel, quote)
 
     if message.content.startswith('!topic'):
@@ -214,7 +162,7 @@ async def on_message(message):
             if not s or not len(s) > 0:
                 s = "🤷"
             await client.add_reaction(message, '🤖')
-            await client.send_message(message.channel, s)
+            await client.send_message(message.channel, s.replace('@', ''))
         except Exception as e:
             logger.info("ERROR!: {}".format(e))
             logger.error("Shat self: {}".format(e))           
@@ -237,7 +185,7 @@ async def on_message(message):
             s = text_model.make_sentence(tries=50)
             if not s or len(s) < 1:
                 s = "My apologies, I cannot quite grasp the essence of that user."
-            await client.send_message(message.channel, s)
+            await client.send_message(message.channel, s.replace('@', ''))
         except Exception as e:
             logger.error("Shat self: {}".format(e))
             await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
@@ -252,7 +200,7 @@ async def on_message(message):
             s = text_model.make_short_sentence(280, tries=20)
             if not s or not len(s) > 0:
                 s = "🤷"
-            await client.send_message(message.channel, s)
+            await client.send_message(message.channel, s.replace('@', ''))
         except Exception as e:
             logger.info("ERROR!: {}".format(e))
             logger.error("Shat self: {}".format(e))
