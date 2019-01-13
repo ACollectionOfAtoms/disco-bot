@@ -2,7 +2,6 @@ import os
 import requests
 
 def get_weather_response(zip_code):
-    uri = WEATHER_ENDPOINT + '&q=' + zip_code + ',us'
     uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
     resp = requests.get(uri)
     return resp.json()
