@@ -1,6 +1,11 @@
 import os
 import requests
 
+
+WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
+WEATHER_URI = 'http://api.openweathermap.org/data/2.5/weather'
+WEATHER_ENDPOINT = "{}?appid={}".format(WEATHER_URI, WEATHER_API_KEY)
+
 def get_weather_response(zip_code):
     uri = '{}&q={},us'.format(WEATHER_ENDPOINT, zip_code)
     resp = requests.get(uri)
@@ -27,8 +32,3 @@ def parse_weather_response(json_dict):
     }
     weather_string = "**{name}**: {description}. *Currently* {current_temp} °F with *highs* of {high_temp} °F and *lows* of {low_temp} °F.".format(**parsed_data)
     return weather_string
-
-
-WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
-WEATHER_URI = 'http://api.openweathermap.org/data/2.5/weather'
-WEATHER_ENDPOINT = "{}?appid={}".format(WEATHER_URI, WEATHER_API_KEY)
