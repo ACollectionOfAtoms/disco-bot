@@ -121,7 +121,7 @@ async def random_markov_response(message):
         async for log in client.logs_from(message.channel, limit=2000, after=random_dt):
             sentences += log.content + '\n'
         text_model = markovify.Text(sentences)
-        s = text_model.make_short_sentence(280, tries=20)
+        s = text_model.make_short_sentence(180, tries=20)
         if not s or not len(s) > 0:
             s = "🤷"
         await client.add_reaction(message, '🤖')
