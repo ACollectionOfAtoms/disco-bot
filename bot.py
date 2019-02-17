@@ -6,6 +6,7 @@ import random
 import time
 import logging
 import datetime
+import re
 
 from lib import nietzsche
 from lib import weather
@@ -15,6 +16,13 @@ logger = logging.getLogger(__name__)
 
 client = discord.Client()
 text_model = {}
+
+async def send_message_without_tag(client, message, message_to_send):
+    # tags like these are processed client side.
+    # example: <@!4524524324> => @user_name
+    tag_regex = '<@!?[0-9]*?>'
+    message_without_tag = re.sub(tag_regex, 'discord user', message_to_send)
+    await client.send_message(message.channel, message_without_tag)
 
 
 async def create_gold_role(server):
@@ -125,7 +133,7 @@ async def random_markov_response(message):
         if not s or not len(s) > 0:
             s = "🤷"
         await client.add_reaction(message, '🤖')
-        await client.send_message(message.channel, s.replace('@', ''))
+        await send_message_without_tag(client, message, s)
     except Exception as e:
         logger.info("ERROR!: {}".format(e))
         logger.error("Shat self: {}".format(e))           
@@ -149,7 +157,7 @@ async def user_markov_response(message):
         s = text_model.make_sentence(tries=50)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
-        await client.send_message(message.channel, s.replace('@', ''))
+        await send_message_without_tag(client, message, s)
     except Exception as e:
         logger.error("Shat self: {}".format(e))
         await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
@@ -165,7 +173,7 @@ async def random_markov_response(message):
         s = text_model.make_short_sentence(280, tries=20)
         if not s or not len(s) > 0:
             s = "🤷"
-        await client.send_message(message.channel, s.replace('@', ''))
+        await send_message_without_tag(client, message, s)
     except Exception as e:
         logger.info("ERROR!: {}".format(e))
         logger.error("Shat self: {}".format(e))
