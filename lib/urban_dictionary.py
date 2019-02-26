@@ -3,7 +3,7 @@ import requests
 URBAN_DICTIONARY_URI = 'http://api.urbandictionary.com/v0/'
 
 def get_first_ud_definition(search_term):
-    uri = '{}define?term={}'.format(URBAN_DICTIONARY_URI.format, search_term)
+    uri = '{}define?term={}'.format(URBAN_DICTIONARY_URI, search_term)
     resp = requests.get(uri)
     json_resp = resp.json()
     definition_list = json_resp.get('list')
