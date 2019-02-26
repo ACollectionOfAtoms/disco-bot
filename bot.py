@@ -10,6 +10,7 @@ import re
 
 from lib import nietzsche
 from lib import weather
+from lib import urban_dictionary
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -96,6 +97,20 @@ def random_date(channel):
     random_timestamp = random_float(min_date, max_date)
     return datetime.datetime.utcfromtimestamp(random_timestamp)
 
+async def urban_dictionary_response(message):
+    try:
+        search_term = message.content.split()[1]
+    except IndexError:
+        await client.send_message(message.channel, "I need a search term.")
+    try:
+        definition = urban_dictionary.get_first_ud_definition(search_term)
+    except Exception as e:
+        logger.exception(e)
+        logger.info('Could not get ud response!')
+        await client.send_message(message.channel, "I've failed to get the definition! Check my error logs.")
+        return
+    await client.send_message(message.channel, definition)
+
 
 async def weather_response(message):
         try:
@@ -111,7 +126,7 @@ async def weather_response(message):
         except Exception as e:
             logger.exception(e)
             logger.info('Could not get weather data!')
-            await client.send_message(message.channel, "Somethings not right...")
+            await client.send_message(message.channel, "Somethings not right... Please check error logs!")
             return
         parsed_response = weather.parse_weather_response(response)
         await client.send_message(message.channel, parsed_response)
@@ -192,6 +207,8 @@ async def on_message(message):
     if message.author == client.user:
         # lmao don't invoke yourself m8
         return
+    if message.content.startswith('!ud'):
+        await urban_dictionary_response(message)
     if message.content.startswith('!weather'):
         await weather_response(message)
     if message.content.startswith('!neechee'):
