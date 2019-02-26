@@ -102,6 +102,7 @@ async def urban_dictionary_response(message):
         search_term = message.content.split()[1]
     except IndexError:
         await client.send_message(message.channel, "I need a search term.")
+        return
     try:
         definition = urban_dictionary.get_first_ud_definition(search_term)
     except Exception as e:
