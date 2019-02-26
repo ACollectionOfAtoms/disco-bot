@@ -111,6 +111,7 @@ async def urban_dictionary_response(message):
         return
     if definition == '':
         await client.send_message(message.channel, 'Sorry, no results for that term.')
+        return
     await client.send_message(message.channel, definition)
 
 
