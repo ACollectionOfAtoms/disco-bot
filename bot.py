@@ -109,6 +109,8 @@ async def urban_dictionary_response(message):
         logger.info('Could not get ud response!')
         await client.send_message(message.channel, "I've failed to get the definition! Check my error logs.")
         return
+    if definition == '':
+        await client.send_message(message.channel, 'Sorry, no results for that term.')
     await client.send_message(message.channel, definition)
 
 
