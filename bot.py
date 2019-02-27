@@ -99,7 +99,7 @@ def random_date(channel):
 
 async def urban_dictionary_response(message):
     try:
-        search_term = message.content.split()[1]
+        search_term = ' '.join(message.content.split()[1:])
     except IndexError:
         await client.send_message(message.channel, "I need a search term.")
         return
