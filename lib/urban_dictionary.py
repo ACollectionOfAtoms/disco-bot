@@ -4,7 +4,7 @@ import urllib
 URBAN_DICTIONARY_URI = 'http://api.urbandictionary.com/v0/'
 
 def get_first_ud_definition(search_term):
-    uri_ready_search_term = urllib.quote(search_term, safe='')
+    uri_ready_search_term = urllib.parse.quote(search_term, safe='')
     uri = '{}define?term={}'.format(URBAN_DICTIONARY_URI, uri_ready_search_term)
     resp = requests.get(uri)
     json_resp = resp.json()
