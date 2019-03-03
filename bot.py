@@ -23,6 +23,7 @@ async def send_message_without_tag(client, message, message_to_send):
     # example: <@!4524524324> => @user_name
     tag_regex = '<@!?[0-9]*?>'
     message_without_tag = re.sub(tag_regex, 'discord user', message_to_send)
+    message_without_tag.replace('@', '')
     await client.send_message(message.channel, message_without_tag)
 
 
