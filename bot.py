@@ -125,7 +125,7 @@ async def weather_response(message):
             await message.channel.send("I need an american zip code.")
             return
         if not zip_code.isdigit():
-            await message.channel("That does not look like a zip code!")
+            await message.channel.send("That does not look like a zip code!")
             return
         try:
             response = weather.get_weather_response(zip_code)
