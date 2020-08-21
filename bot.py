@@ -202,7 +202,7 @@ BOTTALK_COMMAND = '!bottalk'
 HELP_COMMAND = '!help'
 help_message = """
 {ud} <word or phrase> - Get the urban dictionary definition of the word or phrase.
-{weather} <zip-code> - Get weather information from the https://openweathermap.org API.
+{weather} <zip-code> - Get weather information from the openweathermap.org API.
 {neechee} - Get a random quote from Friedrich Nietzsche.
 {topic} - Get the current channel's topic.
 {bottalk} <@user> - Get words that sound like a user.
