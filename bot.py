@@ -162,12 +162,9 @@ async def random_markov_response(message):
 
 
 async def user_markov_response(message):
-    user_id = message.content.split()[1]
-    user_id = ''.join([c for c in user_id if c.isdigit()])
-    sentences = u''
-    logger.info('looking up user {} for bottalk command'.format(user_id))
-    user = client.get_user(user_id)
+    user = message.mentions[0]
     logger.info('found user {} for bottalk command'.format(user))
+    sentences = u''
     async for log in message.channel.history(limit=101):
         if log.author == user:
             sentences += log.content + '\n'
