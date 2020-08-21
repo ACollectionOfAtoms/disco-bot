@@ -134,7 +134,13 @@ async def weather_response(message):
             logger.info('Could not get weather data!')
             await message.channel.send("Somethings not right... Please check error logs!")
             return
-        parsed_response = weather.parse_weather_response(response)
+        try:
+            parsed_response = weather.parse_weather_response(response)
+        except KeyError as e:
+            logger.exception(e)
+            logger.info('Could not parse weather data!')
+            await message.channel.send("That zip code didn't work for me. Is it valid?")
+            return
         await message.channel.send(parsed_response)
 
 
@@ -173,7 +179,7 @@ async def user_markov_response(message):
         return
     try:
         text_model = markovify.Text(sentences)
-        s = text_model.make_sentence(tries=50)
+        s = text_model.make_short_sentence(300, tries=50)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
         await message.channel.send(s)
