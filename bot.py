@@ -201,7 +201,10 @@ async def on_message(message):
     if message.content.startswith('!neechee'):
         await nietzsche_response(message)
     if message.content.startswith('!topic'):
-        await  message.channel.send(message.channel.topic)
+        if message.channel.topic:
+            await message.channel.send(message.channel.topic)
+        else:
+            await message.channel.send('This channel is without a topic.')
     if client.user.mentioned_in(message):
         await random_markov_response(message)
     if message.content.startswith('!bottalk'):
