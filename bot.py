@@ -74,7 +74,7 @@ async def on_ready():
             logger.info('I am in {}'.format(g))
             logger.info('attempting to update role...')
             coroutines.append(change_role_colour(g))
-        coroutines.append(client.change_presence(game=discord.Game(name='Hatoful Boyfriend: A School of Hope and White Wings')))
+        coroutines.append(client.change_presence(activity=discord.Game(name='Hatoful Boyfriend: A School of Hope and White Wings')))
     except Exception as e:
         logger.exception(e)
     await asyncio.gather(*coroutines)
