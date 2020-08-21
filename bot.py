@@ -186,7 +186,7 @@ async def user_markov_response(message):
 def should_talk():
     # about equal to a three of a kind
     lucky_number = 1
-    roll = random.randint(1,47)
+    roll = random.randint(1,88)
     return roll == lucky_number
 
 
