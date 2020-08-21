@@ -166,7 +166,7 @@ async def user_markov_response(message):
     user_id = ''.join([c for c in user_id if c.isdigit()])
     sentences = u''
     logger.info('looking up user {} for bottalk command'.format(user_id))
-    user = await client.get_user(user_id)
+    user = client.get_user(user_id)
     logger.info('found user {} for bottalk command'.format(user))
     async for log in message.channel.history(limit=101):
         if log.author == user:
