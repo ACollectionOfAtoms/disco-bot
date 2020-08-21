@@ -173,6 +173,7 @@ async def user_markov_response(message):
             sentences += log.content + '\n'
     if len(sentences) == 0:
         await message.channel.send("I got nothing 🤷")
+        return
     try:
         text_model = markovify.Text(sentences)
         s = text_model.make_sentence(tries=50)
