@@ -18,13 +18,14 @@ logger = logging.getLogger(__name__)
 client = discord.Client()
 text_model = {}
 
-async def send_message_without_tag(client, message, message_to_send):
-    # tags like these are processed client side.
-    # example: <@!4524524324> => @user_name
-    tag_regex = '<@!?[0-9]*?>'
-    message_without_tag = re.sub(tag_regex, 'discord user', message_to_send)
-    message_without_tag.replace('@', '')
-    await client.send_message(message.channel, message_without_tag)
+# TODO: Is this still needed?!
+# async def send_message_without_tag(client, message, message_to_send):
+#     # tags like these are processed client side.
+#     # example: <@!4524524324> => @user_name
+#     tag_regex = '<@!?[0-9]*?>'
+#     message_without_tag = re.sub(tag_regex, 'discord user', message_to_send)
+#     message_without_tag.replace('@', '')
+#     await client.send_message(message.channel, message_without_tag)
 
 
 async def create_gold_role(server):
@@ -69,10 +70,10 @@ async def on_ready():
     logger.info(client.user.id)
     coroutines = []
     try:
-        for s in client.servers:
-            logger.info('I am in {}'.format(s))
+        for g in client.guilds:
+            logger.info('I am in {}'.format(g))
             logger.info('attempting to update role...')
-            coroutines.append(change_role_colour(s))
+            coroutines.append(change_role_colour(g))
         coroutines.append(client.change_presence(game=discord.Game(name='Hatoful Boyfriend: A School of Hope and White Wings')))
     except Exception as e:
         logger.exception(e)
@@ -102,62 +103,62 @@ async def urban_dictionary_response(message):
     try:
         search_term = ' '.join(message.content.split()[1:])
     except IndexError:
-        await client.send_message(message.channel, "I need a search term.")
+        await message.channel.send("I need a search term.")
         return
     try:
         definition = urban_dictionary.get_first_ud_definition(search_term)
     except Exception as e:
         logger.exception(e)
         logger.info('Could not get ud response!')
-        await client.send_message(message.channel, "I've failed to get the definition! Check my error logs.")
+        await message.channel.send("I've failed to get the definition! Check my error logs.")
         return
     if definition == '':
-        await client.send_message(message.channel, 'Sorry, no results for that term.')
+        await message.channel.send('Sorry, no results for that term.')
         return
-    await client.send_message(message.channel, definition)
+    await message.channel.send(definition)
 
 
 async def weather_response(message):
         try:
             zip_code = message.content.split()[1]
         except IndexError:
-            await client.send_message(message.channel, "I need an american zip code.")
+            await message.channel.send("I need an american zip code.")
             return
         if not zip_code.isdigit():
-            await client.send_message(message.channel, "That does not look like a zip code!")
+            await message.channel("That does not look like a zip code!")
             return
         try:
             response = weather.get_weather_response(zip_code)
         except Exception as e:
             logger.exception(e)
             logger.info('Could not get weather data!')
-            await client.send_message(message.channel, "Somethings not right... Please check error logs!")
+            await message.channel.send("Somethings not right... Please check error logs!")
             return
         parsed_response = weather.parse_weather_response(response)
-        await client.send_message(message.channel, parsed_response)
+        await message.channel.send(parsed_response)
 
 
 async def nietzsche_response(message):
     quote = nietzsche.QUOTES[random.randint(0, len(nietzsche.QUOTES) - 1)]
-    await client.send_message(message.channel, quote)
+    await message.channel.send(quote)
 
 
 async def random_markov_response(message):
     try:
         sentences = u''
         random_dt = random_date(message.channel)
-        async for log in client.logs_from(message.channel, limit=2000, after=random_dt):
+        async for log in message.channel.history(limit=2000, around=random_dt):
             sentences += log.content + '\n'
         text_model = markovify.Text(sentences)
         s = text_model.make_short_sentence(180, tries=20)
         if not s or not len(s) > 0:
             s = "🤷"
-        await client.add_reaction(message, '🤖')
-        await send_message_without_tag(client, message, s)
+        await message.add_reaction('🤖')
+        await message.channel.send(s)
     except Exception as e:
         logger.info("ERROR!: {}".format(e))
         logger.error("Shat self: {}".format(e))           
-        await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
+        await message.channel.send("Sorry, I've just gone and shat myself.")
 
 
 async def user_markov_response(message):
@@ -165,40 +166,22 @@ async def user_markov_response(message):
     user_id = ''.join([c for c in user_id if c.isdigit()])
     sentences = u''
     logger.info('looking up user {} for bottalk command'.format(user_id))
-    user = await client.get_user_info(user_id)
+    user = await client.get_user(user_id)
     logger.info('found user {} for bottalk command'.format(user))
-    async for log in client.logs_from(message.channel, limit=4000):
+    async for log in message.channel.history(limit=4000):
         if log.author == user:
             sentences += log.content + '\n'
     if len(sentences) == 0:
-        await client.send_message(message.channel, "I got nothing 🤷")
+        await message.channel.send("I got nothing 🤷")
     try:
         text_model = markovify.Text(sentences)
         s = text_model.make_sentence(tries=50)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
-        await send_message_without_tag(client, message, s)
+        await message.channel.send(s)
     except Exception as e:
         logger.error("Shat self: {}".format(e))
-        await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-
-
-async def random_markov_response(message):
-    try:
-        sentences = u''
-        random_dt = random_date(message.channel)
-        async for log in client.logs_from(message.channel, limit=2000, after=random_dt):
-            sentences += log.content + '\n'
-        text_model = markovify.Text(sentences)
-        s = text_model.make_short_sentence(280, tries=20)
-        if not s or not len(s) > 0:
-            s = "🤷"
-        await send_message_without_tag(client, message, s)
-    except Exception as e:
-        logger.info("ERROR!: {}".format(e))
-        logger.error("Shat self: {}".format(e))
-        await client.send_message(message.channel, "Sorry, I've just gone and shat myself.")
-
+        await message.channel.send("Sorry, I've just gone and shat myself.")
 
 def should_talk():
     # about equal to a three of a kind
@@ -210,7 +193,6 @@ def should_talk():
 @client.event
 async def on_message(message):
     if message.author == client.user:
-        # lmao don't invoke yourself m8
         return
     if message.content.startswith('!ud'):
         await urban_dictionary_response(message)
@@ -219,7 +201,7 @@ async def on_message(message):
     if message.content.startswith('!neechee'):
         await nietzsche_response(message)
     if message.content.startswith('!topic'):
-        await client.send_message(message.channel, message.channel.topic)
+        await  message.channel.send(message.channel.topic)
     if client.user.mentioned_in(message):
         await random_markov_response(message)
     if message.content.startswith('!bottalk'):
