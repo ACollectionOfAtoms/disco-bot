@@ -194,25 +194,43 @@ def should_talk():
     roll = random.randint(1,88)
     return roll == lucky_number
 
+UD_COMMAND = '!ud'
+WEATHER_COMMAND = '!weather'
+NEECHEE_COMMAND = '!neechee'
+TOPIC_COMMAND = '!topic'
+BOTTALK_COMMAND = '!bottalk'
+HELP_COMMAND = '!help'
+help_message = """
+{ud} <word or phrase> - Get the urban dictionary definition of the word or phrase.
+{weather} <zip-code> - Get weather information from the https://openweathermap.org API.
+{neechee} - Get a random quote from Friedrich Nietzsche.
+{topic} - Get the current channel's topic.
+{bottalk} <@user> - Get words that sound like a user.
+{help} - Get this message.
+
+Mention me to get words that sound like they're from the current channel.
+""".format(ud=UD_COMMAND, weather=WEATHER_COMMAND, neechee=NEECHEE_COMMAND, topic=TOPIC_COMMAND, bottalk=BOTTALK_COMMAND, help=HELP_COMMAND)
 
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content.startswith('!ud'):
+    if message.content.startswith(HELP_COMMAND):
+        await message.channel.send(help_message)
+    if message.content.startswith(UD_COMMAND):
         await urban_dictionary_response(message)
-    if message.content.startswith('!weather'):
+    if message.content.startswith(WEATHER_COMMAND):
         await weather_response(message)
-    if message.content.startswith('!neechee'):
+    if message.content.startswith(NEECHEE_COMMAND):
         await nietzsche_response(message)
-    if message.content.startswith('!topic'):
+    if message.content.startswith(TOPIC_COMMAND):
         if message.channel.topic:
             await message.channel.send(message.channel.topic)
         else:
             await message.channel.send('This channel is without a topic.')
     if client.user.mentioned_in(message):
         await random_markov_response(message)
-    if message.content.startswith('!bottalk'):
+    if message.content.startswith(BOTTALK_COMMAND):
         await user_markov_response(message)
     if should_talk():
         await random_markov_response(message)
