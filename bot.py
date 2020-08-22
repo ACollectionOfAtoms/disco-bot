@@ -18,16 +18,6 @@ logger = logging.getLogger(__name__)
 client = discord.Client()
 text_model = {}
 
-# TODO: Is this still needed?!
-# async def send_message_without_tag(client, message, message_to_send):
-#     # tags like these are processed client side.
-#     # example: <@!4524524324> => @user_name
-#     tag_regex = '<@!?[0-9]*?>'
-#     message_without_tag = re.sub(tag_regex, 'discord user', message_to_send)
-#     message_without_tag.replace('@', '')
-#     await client.send_message(message.channel, message_without_tag)
-
-
 async def create_gold_role(server):
     logger.info('Checking if gold role exists in {}'.format(server))
     gold_name = 'Mr. Data Gold'
@@ -154,7 +144,7 @@ async def random_markov_response(message):
         sentences = u''
         random_dt = random_date(message.channel)
         async for log in message.channel.history(limit=101, around=random_dt):
-            sentences += log.content + '\n'
+            sentences += log.clean_content + '\n'
         text_model = markovify.Text(sentences)
         s = text_model.make_short_sentence(180, tries=20)
         if not s or not len(s) > 0:
@@ -174,7 +164,7 @@ async def user_markov_response(message):
     random_dt = random_date(message.channel)
     async for log in message.channel.history(limit=2000, before=random_dt):
         if log.author == user:
-            sentences += log.content + '\n'
+            sentences += log.clean_content + '\n'
     if len(sentences) == 0:
         await message.channel.send("I got nothing 🤷")
         return
