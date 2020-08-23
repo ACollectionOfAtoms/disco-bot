@@ -19,9 +19,10 @@ def get_headlines_response(section):
   uri = '{}/{}.json?api-key={}'.format(NYT_URL, section, NYT_KEY)
   logger.info('using uri: {}'.format(uri))
   resp = requests.get(uri)
-  if resp['status'] != 'OK':
+  response_json = resp.json()
+  if response_json['status'] != 'OK':
     raise Exception('Could not fetch data: {}'.format(resp))
-  return resp.json()
+  return response_json
 
 def parse_first_three_titles(nyt_resp):
   logger.info('parsing using results {}'.format(nyt_resp))
