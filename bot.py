@@ -179,7 +179,7 @@ async def user_markov_response(message):
         logger.error("Shat self: {}".format(e))
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
-async def headline_response(message):
+async def headlines_response(message):
     valid_sections_pretty = ', '.join(nyt.VALID_SECTIONS)
     err_message = "I need a section. One of: {}".format(valid_sections_pretty)
     try:
@@ -192,6 +192,7 @@ async def headline_response(message):
     except nyt.UnknownSectionError:
         await message.channel.send(err_message)
         return
+    logger.info('Sending headlines {}'.format(headlines))
     m = """
     * {}
     * {}
@@ -209,7 +210,7 @@ WEATHER_COMMAND = '!weather'
 NEECHEE_COMMAND = '!neechee'
 TOPIC_COMMAND = '!topic'
 BOTTALK_COMMAND = '!bottalk'
-HEADLINE_COMMAND = '!headline'
+HEADLINE_COMMAND = '!headlines'
 HELP_COMMAND = '!help'
 help_message = """
 {ud} <word or phrase> - Get the urban dictionary definition of the word or phrase.
@@ -241,7 +242,7 @@ async def on_message(message):
         else:
             await message.channel.send('This channel is without a topic.')
     if message.content.startswith(HEADLINE_COMMAND):
-        await headline_response(message)
+        await headlines_response(message)
     if client.user.mentioned_in(message):
         await random_markov_response(message)
     if message.content.startswith(BOTTALK_COMMAND):

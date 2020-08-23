@@ -1,5 +1,9 @@
 import os
 import requests
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class UnknownSectionError(Exception):
   pass
@@ -7,18 +11,20 @@ class UnknownSectionError(Exception):
 NYT_KEY = os.environ['NYT_KEY']
 NYT_URL = 'https://api.nytimes.com/svc/topstories/v2'
 
-VALID_SECTIONS = ['arts', 'automobiles', 'books', 'business', 'fashion', 'food', 'health', 'home', 'insider', 'magazine', 'movies', 'nyregion', 'obituaries', 'opinion', 'politics', 'realestate', 'science', 'sports', 'sundayreview', 'technology', 'theater', 't-magazine', 'travel', 'upshot', 'us', 'world.']
+VALID_SECTIONS = ['arts', 'automobiles', 'books', 'business', 'fashion', 'food', 'health', 'home', 'insider', 'magazine', 'movies', 'nyregion', 'obituaries', 'opinion', 'politics', 'realestate', 'science', 'sports', 'sundayreview', 'technology', 'theater', 't-magazine', 'travel', 'upshot', 'us', 'world']
 
 def get_headlines_response(section):
   if section not in VALID_SECTIONS:
     raise UnknownSectionError()
   uri = '{}/{}.json?api-key={}'.format(NYT_URL, section, NYT_KEY)
+  logger.info('using uri: {}'.format(uri))
   resp = requests.get(uri)
   if resp['status'] != 'OK':
     raise Exception('Could not fetch data: {}'.format(resp))
   return resp.json()
 
 def parse_first_three_titles(nyt_resp):
+  logger.info('parsing using results {}'.format(nyt_resp))
   results = nyt_resp['results']
   first_three = results[:3]
   titles = [a['title'] for a in first_three]
