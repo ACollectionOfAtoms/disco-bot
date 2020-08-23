@@ -193,10 +193,9 @@ async def headlines_response(message):
         await message.channel.send(err_message)
         return
     logger.info('Sending headlines {}'.format(headlines))
-    m = """
+    m = """```* {}
     * {}
-    * {}
-    * {}""".format(headlines[0], headlines[1], headlines[2])
+    * {}```""".format(headlines[0], headlines[1], headlines[2])
     await message.channel.send(m)
 
 def should_talk():
