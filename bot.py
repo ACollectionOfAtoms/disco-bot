@@ -169,7 +169,7 @@ async def user_markov_response(message):
         await message.channel.send("I got nothing 🤷")
         return
     try:
-        text_model = markovify.Text(sentences)
+        text_model = markovify.Text(sentences, well_formed=False)
         s = text_model.make_short_sentence(300, tries=50)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
