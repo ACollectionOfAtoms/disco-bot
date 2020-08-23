@@ -1,7 +1,7 @@
 import os
 import requests
 
-class UnkownSection(Exception):
+class UnknownSectionError(Exception):
   pass
 
 NYT_KEY = os.environ['NYT_KEY']
@@ -11,7 +11,7 @@ VALID_SECTIONS = ['arts', 'automobiles', 'books', 'business', 'fashion', 'food',
 
 def get_headlines_response(section):
   if section not in VALID_SECTIONS:
-    raise UnkownSection()
+    raise UnknownSectionError()
   uri = '{}/{}.json?api-key={}'.format(NYT_URL, section, NYT_KEY)
   resp = requests.get(uri)
   if resp['status'] != 'OK':

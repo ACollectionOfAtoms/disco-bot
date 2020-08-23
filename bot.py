@@ -11,7 +11,7 @@ import re
 from lib import nietzsche
 from lib import weather
 from lib import urban_dictionary
-from lib.nyt import UnknownSection, get_headlines, VALID_SECTIONS
+from lib import nyt
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -180,7 +180,7 @@ async def user_markov_response(message):
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
 async def headline_response(message):
-    valid_sections_pretty = ', '.join(VALID_SECTIONS)
+    valid_sections_pretty = ', '.join(nyt.VALID_SECTIONS)
     err_message = "I need a section. One of: {}".format(valid_sections_pretty)
     try:
         section = message.content.split()[1]
@@ -188,8 +188,8 @@ async def headline_response(message):
         await message.channel.send(err_message)
         return
     try:
-        headlines = get_headlines(section)
-    except UnknownSection:
+        headlines = nyt.get_headlines(section)
+    except nyt.UnknownSectionError:
         await message.channel.send(err_message)
         return
     m = """
