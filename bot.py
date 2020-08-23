@@ -179,7 +179,7 @@ async def user_markov_response(message):
         logger.error("Shat self: {}".format(e))
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
-def headline_response(message):
+async def headline_response(message):
     valid_sections_pretty = ', '.join(VALID_SECTIONS)
     err_message = "I need a section. One of: {}".format(valid_sections_pretty)
     try:
