@@ -11,6 +11,7 @@ import re
 from lib import nietzsche
 from lib import weather
 from lib import urban_dictionary
+from lib.nyt import UnknownSection, get_headlines, VALID_SECTIONS
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -178,6 +179,25 @@ async def user_markov_response(message):
         logger.error("Shat self: {}".format(e))
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
+def headline_response(message):
+    valid_sections_pretty = ', '.join(VALID_SECTIONS)
+    err_message = "I need a section. One of: {}".format(valid_sections_pretty)
+    try:
+        section = message.content.split()[1]
+    except IndexError:
+        await message.channel.send(err_message)
+        return
+    try:
+        headlines = get_headlines(section)
+    except UnknownSection:
+        await message.channel.send(err_message)
+        return
+    m = """
+    * {}
+    * {}
+    * {}""".format(headlines[0], headlines[1], headlines[2])
+    await message.channel.send(m)
+
 def should_talk():
     # about equal to a three of a kind
     lucky_number = 1
@@ -189,6 +209,7 @@ WEATHER_COMMAND = '!weather'
 NEECHEE_COMMAND = '!neechee'
 TOPIC_COMMAND = '!topic'
 BOTTALK_COMMAND = '!bottalk'
+HEADLINE_COMMAND = '!headline'
 HELP_COMMAND = '!help'
 help_message = """
 {ud} <word or phrase> - Get the urban dictionary definition of the word or phrase.
@@ -196,10 +217,11 @@ help_message = """
 {neechee} - Get a random quote from Friedrich Nietzsche.
 {topic} - Get the current channel's topic.
 {bottalk} <@user> - Get words that sound like a user.
+{headline} <section> - Get the latest NYT headline.
 {help} - Get this message.
 
 Mention me to get words that sound like they're from the current channel.
-""".format(ud=UD_COMMAND, weather=WEATHER_COMMAND, neechee=NEECHEE_COMMAND, topic=TOPIC_COMMAND, bottalk=BOTTALK_COMMAND, help=HELP_COMMAND)
+""".format(ud=UD_COMMAND, weather=WEATHER_COMMAND, neechee=NEECHEE_COMMAND, topic=TOPIC_COMMAND, bottalk=BOTTALK_COMMAND, headline=HEADLINE_COMMAND, help=HELP_COMMAND)
 
 @client.event
 async def on_message(message):
@@ -218,6 +240,8 @@ async def on_message(message):
             await message.channel.send(message.channel.topic)
         else:
             await message.channel.send('This channel is without a topic.')
+    if message.content.startswith(HEADLINE_COMMAND):
+        await headline_response(message)
     if client.user.mentioned_in(message):
         await random_markov_response(message)
     if message.content.startswith(BOTTALK_COMMAND):
