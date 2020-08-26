@@ -144,10 +144,10 @@ async def random_markov_response(message):
     try:
         sentences = u''
         random_dt = random_date(message.channel)
-        async for log in message.channel.history(limit=101, around=random_dt):
+        async for log in message.channel.history(limit=2000, after=random_dt):
             sentences += log.clean_content + '\n'
         text_model = markovify.Text(sentences)
-        s = text_model.make_short_sentence(180, tries=20)
+        s = text_model.make_short_sentence(280, tries=50)
         if not s or not len(s) > 0:
             s = "🤷"
         await message.add_reaction('🤖')
