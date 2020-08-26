@@ -19,6 +19,21 @@ logger = logging.getLogger(__name__)
 client = discord.Client()
 text_model = {}
 
+data_quotes = [
+    "I never knew what a friend was until I met Geordi. He spoke to me as though I were human. He treated me no differently from anyone else. He accepted me for what I am. And that, I have learned, is friendship.",
+    "Flair is what makes the difference between artistry and mere competence. Cmdr. William Riker",
+    "With the first link, the chain is forged. The first speech censured, the first thought forbidden, the first freedom denied - chains us all irrevocably.",
+    "Life's true gift is the capacity to enjoy enjoyment.",
+    "I could be chasing an untamed ornithoid without cause.",
+    "Goodbye, Data.",
+    "I have to set an example, now more than ever. Facing death is the ultimate test of character. – Cmdr. William Riker",
+    "The arbiter of a demanding wargame rendered the word \"mismatch\" as \"challenge\" in his language.",
+    "My positronic brain has several layers of shielding to protect me from power surges. It would be possible for you to remove my cranial unit and take it with you."
+]
+
+def random_data_quote():
+    return data_quotes[random.randint(0, len(data_quotes) - 1)]
+
 async def create_gold_role(server):
     logger.info('Checking if gold role exists in {}'.format(server))
     gold_name = 'Mr. Data Gold'
@@ -149,7 +164,7 @@ async def random_markov_response(message):
         text_model = markovify.Text(sentences)
         s = text_model.make_short_sentence(280, tries=50)
         if not s or not len(s) > 0:
-            s = "🤷"
+            s = "'" + random_data_quote() + "'" + " [insufficient data]"
         await message.add_reaction('🤖')
         await message.channel.send(s)
     except Exception as e:
