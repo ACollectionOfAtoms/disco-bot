@@ -28,7 +28,7 @@ def parse_weather_response(json_dict):
     place_name = json_dict["name"]
     place_id = json_dict["id"]
     weather_objs = json_dict["weather"]
-    descriptions = [wo["description"] for wo in weather_objs]
+    descriptions = [wo["description"].capitalize() for wo in weather_objs]
     description_string = ", ".join(descriptions)
     current_temp = json_dict["main"]["temp"]
     high_temp = json_dict["main"]["temp_max"]
@@ -49,9 +49,7 @@ def parse_weather_response(json_dict):
     embed_data = {
         "title": "Current Weather Data",
         "type": "rich",
-        "description": "https://openweathermap.org/city/{place_id}".format(
-            place_id=place_id
-        ),
+        "description": "Weather data for: {p}".format(p=place_name),
         "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
         "timestamp": datetime.datetime.now().isoformat(),
         "color": 0xEB6E4B,
@@ -65,10 +63,10 @@ def parse_weather_response(json_dict):
         "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
         "fields": [
             {"name": "Conditions", "value": description_string},
-            {"name": "Temperature", "value": str(current_temp)},
-            {"name": "High", "value": str(high_temp)},
-            {"name": "Low", "value": str(low_temp)},
-            {"name": "Feels Like", "value": str(feels_like)},
+            {"name": "Currently", "value": str(k_to_f(current_temp)) + "F"},
+            {"name": "High", "value": str(k_to_f(high_temp)) + "F"},
+            {"name": "Low", "value": str(k_to_f(low_temp)) + "F"},
+            {"name": "Feels Like", "value": str(k_to_f(feels_like)) + "F"},
         ],
     }
     embed = discord.Embed.from_dict(embed_data)
