@@ -159,7 +159,7 @@ async def weather_response(message):
         logger.info("Could not parse weather data!")
         await message.channel.send("That zip code didn't work for me. Is it valid?")
         return
-    await message.channel.send(parsed_response)
+    await message.channel.send(embed=parsed_response)
 
 
 async def nietzsche_response(message):
