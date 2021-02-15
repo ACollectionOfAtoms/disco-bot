@@ -67,5 +67,5 @@ def parse_weather_response(json_dict):
             {"name": "Feels Like", "value": feels_like},
         ],
     }
-    embed = discord.Embed(**embed_data)
+    embed = discord.Embed.from_dict(embed_data)
     return embed
