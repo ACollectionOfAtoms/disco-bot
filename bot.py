@@ -158,7 +158,9 @@ async def weather_response(message):
     except Exception as e:
         logger.exception(e)
         logger.info("Could not parse weather data!")
-        await message.channel.send("That zip code didn't work for me. Is it valid?")
+        await message.channel.send(
+            "Sorry, shat myself while trying to show weather data. Ask Adam to fix it."
+        )
         return
     await message.channel.send(embed=parsed_response)
 

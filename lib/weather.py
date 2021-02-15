@@ -54,7 +54,7 @@ def parse_weather_response(json_dict):
         ),
         "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
         "timestamp": datetime.datetime.now().isoformat(),
-        "color": discord.Color.dark_gold(),
+        "color": 0xEB6E4B,
         "image": {
             "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
                 icon_id=icon_id
