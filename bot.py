@@ -153,6 +153,7 @@ async def weather_response(message):
         await message.channel.send("Somethings not right... Please check error logs!")
         return
     try:
+        logger.info("parsing weather data...")
         parsed_response = weather.parse_weather_response(response)
     except KeyError as e:
         logger.exception(e)
@@ -273,6 +274,7 @@ async def on_message(message):
         async with message.channel.typing():
             await urban_dictionary_response(message)
     if message.content.startswith(WEATHER_COMMAND):
+        logger.info("sending weather data...")
         async with message.channel.typing():
             await weather_response(message)
     if message.content.startswith(NEECHEE_COMMAND):

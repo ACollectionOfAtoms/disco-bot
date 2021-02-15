@@ -2,7 +2,10 @@ import os
 import requests
 import datetime
 import discord
+import logging
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 WEATHER_API_KEY = os.environ["WEATHER_API_KEY"]
 WEATHER_URI = "http://api.openweathermap.org/data/2.5/weather"
@@ -21,6 +24,7 @@ def k_to_f(kelvin):
 
 
 def parse_weather_response(json_dict):
+    logger.info("parsing weather dictionary...")
     place_name = json_dict["name"]
     place_id = json_dict["id"]
     weather_objs = json_dict["weather"]
