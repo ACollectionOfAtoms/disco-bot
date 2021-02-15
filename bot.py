@@ -264,29 +264,30 @@ Mention me to get words that sound like they're from the current channel.
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith(HELP_COMMAND):
-        await message.channel.send(help_message)
-    if message.content.startswith(UD_COMMAND):
-        await urban_dictionary_response(message)
-    if message.content.startswith(WEATHER_COMMAND):
-        await weather_response(message)
-    if message.content.startswith(NEECHEE_COMMAND):
-        await nietzsche_response(message)
-    if message.content.startswith(TOPIC_COMMAND):
-        if message.channel.topic:
-            await message.channel.send(message.channel.topic)
-        else:
-            await message.channel.send("This channel is without a topic.")
-    if message.content.startswith(HEADLINE_COMMAND):
-        await headlines_response(message)
-    if client.user.mentioned_in(message):
-        await random_markov_response(message)
-    if message.content.startswith(BOTTALK_COMMAND):
-        await user_markov_response(message)
-    if should_talk():
-        await random_markov_response(message)
+    async with message.channel.typing():
+        if message.author == client.user:
+            return
+        if message.content.startswith(HELP_COMMAND):
+            await message.channel.send(help_message)
+        if message.content.startswith(UD_COMMAND):
+            await urban_dictionary_response(message)
+        if message.content.startswith(WEATHER_COMMAND):
+            await weather_response(message)
+        if message.content.startswith(NEECHEE_COMMAND):
+            await nietzsche_response(message)
+        if message.content.startswith(TOPIC_COMMAND):
+            if message.channel.topic:
+                await message.channel.send(message.channel.topic)
+            else:
+                await message.channel.send("This channel is without a topic.")
+        if message.content.startswith(HEADLINE_COMMAND):
+            await headlines_response(message)
+        if client.user.mentioned_in(message):
+            await random_markov_response(message)
+        if message.content.startswith(BOTTALK_COMMAND):
+            await user_markov_response(message)
+        if should_talk():
+            await random_markov_response(message)
 
 
 # TODO: Add message to alert user on start/restart
