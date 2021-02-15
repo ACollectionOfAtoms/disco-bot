@@ -49,11 +49,11 @@ def parse_weather_response(json_dict):
     embed_data = {
         "title": "Current Weather Data",
         "type": "rich",
-        "description": "Weather data for: {p}".format(p=place_name),
+        "description": "{p}".format(p=place_name),
         "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
         "timestamp": datetime.datetime.now().isoformat(),
         "color": 0xEB6E4B,
-        "image": {
+        "thumbnail": {
             "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
                 icon_id=icon_id
             ),
