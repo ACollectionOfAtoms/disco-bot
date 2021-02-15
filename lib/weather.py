@@ -55,7 +55,6 @@ def parse_weather_response(json_dict):
         "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
         "timestamp": datetime.datetime.now().isoformat(),
         "color": discord.Color.dark_gold(),
-        "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
         "image": {
             "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
                 icon_id=icon_id
@@ -63,12 +62,13 @@ def parse_weather_response(json_dict):
             "height": 100,
             "width": 100,
         },
+        "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
         "fields": [
             {"name": "Conditions", "value": description_string},
-            {"name": "Temperature", "value": current_temp},
-            {"name": "High", "value": high_temp},
-            {"name": "Low", "value": low_temp},
-            {"name": "Feels Like", "value": feels_like},
+            {"name": "Temperature", "value": str(current_temp)},
+            {"name": "High", "value": str(high_temp)},
+            {"name": "Low", "value": str(low_temp)},
+            {"name": "Feels Like", "value": str(feels_like)},
         ],
     }
     embed = discord.Embed.from_dict(embed_data)
