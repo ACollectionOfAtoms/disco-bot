@@ -137,7 +137,7 @@ async def weather_response(message):
             response = weather.get_weather_response(zip_code)
         except Exception as e:
             logger.exception(e)
-            logger.info('Could not get weather data!')
+            logger.info('Sorry, an error occurred. Could not get weather data!')
             await message.channel.send("Somethings not right... Please check error logs!")
             return
         try:
