@@ -39,7 +39,6 @@ def degToCompass(num):
 
 
 def parse_weather_response(json_dict):
-    logger.info("parsing weather dictionary...")
     place_name = json_dict["name"]
     country_code = json_dict["sys"]["country"]
     place_id = json_dict["id"]
@@ -102,5 +101,4 @@ def parse_weather_response(json_dict):
         },
     }
     embed = discord.Embed.from_dict(embed_data)
-    logger.info("Sending embed {embed}".format(embed=embed))
     return embed
