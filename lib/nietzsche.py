@@ -16,5 +16,5 @@ QUOTES = [
     "That for which we find words is something already dead in our hearts",
     "I have forgotten my umbrella.",
     "God is dead! God remains dead! And we have killed him.",
-    "Which is it: is man one of God's blunders, or is God one of man's blunders?"
+    "Which is it: is man one of God's blunders, or is God one of man's blunders?",
 ]

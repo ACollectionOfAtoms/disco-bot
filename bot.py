@@ -27,16 +27,18 @@ data_quotes = [
     "I could be chasing an untamed ornithoid without cause.",
     "Goodbye, Data.",
     "I have to set an example, now more than ever. Facing death is the ultimate test of character. – Cmdr. William Riker",
-    "The arbiter of a demanding wargame rendered the word \"mismatch\" as \"challenge\" in his language.",
-    "My positronic brain has several layers of shielding to protect me from power surges. It would be possible for you to remove my cranial unit and take it with you."
+    'The arbiter of a demanding wargame rendered the word "mismatch" as "challenge" in his language.',
+    "My positronic brain has several layers of shielding to protect me from power surges. It would be possible for you to remove my cranial unit and take it with you.",
 ]
+
 
 def random_data_quote():
     return data_quotes[random.randint(0, len(data_quotes) - 1)]
 
+
 async def create_gold_role(server):
-    logger.info('Checking if gold role exists in {}'.format(server))
-    gold_name = 'Mr. Data Gold'
+    logger.info("Checking if gold role exists in {}".format(server))
+    gold_name = "Mr. Data Gold"
     role_names = [r.name for r in server.roles]
     top_role_index = len(role_names) + 1
     if gold_name in role_names:
@@ -45,42 +47,49 @@ async def create_gold_role(server):
     fields = {
         "name": gold_name,
         "colour": discord.Color.gold(),
-        "position": top_role_index
+        "position": top_role_index,
     }
-    logger.info('Creating gold role in {}'.format(server))
+    logger.info("Creating gold role in {}".format(server))
     await client.create_role(server, **fields)
     return top_role_index
 
 
 async def set_gold_role_to_top(server, role, position):
-    logger.info('setting gold role to top for server {}'.format(server))
+    logger.info("setting gold role to top for server {}".format(server))
     client.edit_role(server, role, position=position)
 
 
 async def change_role_colour(server):
     top_index = await create_gold_role(server)
-    role = discord.utils.get(server.roles, name='Mr. Data Gold')
-    logger.info('Found gold role, trying to add to self at server: {}'.format(server))
+    role = discord.utils.get(server.roles, name="Mr. Data Gold")
+    logger.info("Found gold role, trying to add to self at server: {}".format(server))
     try:
         await client.add_roles(server.me, role)
     except Exception as e:
         logger.exception(e)
-    logger.info('Succesfully added role')
+    logger.info("Succesfully added role")
     await set_gold_role_to_top(server, role, top_index)
-    logger.info('succesfully set gold role to top')
+    logger.info("succesfully set gold role to top")
+
 
 @client.event
 async def on_ready():
-    logger.info('Logged in as')
+    logger.info("Logged in as")
     logger.info(client.user.name)
     logger.info(client.user.id)
     coroutines = []
     try:
         for g in client.guilds:
-            logger.info('I am in {}'.format(g))
-            logger.info('attempting to update role...')
+            logger.info("I am in {}".format(g))
+            logger.info("attempting to update role...")
             coroutines.append(change_role_colour(g))
-        coroutines.append(client.change_presence(activity=discord.Game(name='Hatoful Boyfriend: A School of Hope and White Wings')))
+        coroutines.append(
+            client.change_presence(
+                activity=discord.Game(
+                    name="Hatoful Boyfriend: A School of Hope and White Wings"
+                )
+            )
+        )
     except Exception as e:
         logger.exception(e)
     await asyncio.gather(*coroutines)
@@ -88,7 +97,7 @@ async def on_ready():
 
 @client.event
 async def on_server_join(server):
-    logger.info('Joined server: {}'. format(server))
+    logger.info("Joined server: {}".format(server))
 
 
 def random_float(float_a, float_b):
@@ -105,9 +114,10 @@ def random_date(channel):
     random_timestamp = random_float(min_date, max_date)
     return datetime.datetime.utcfromtimestamp(random_timestamp)
 
+
 async def urban_dictionary_response(message):
     try:
-        search_term = ' '.join(message.content.split()[1:])
+        search_term = " ".join(message.content.split()[1:])
     except IndexError:
         await message.channel.send("I need a search term.")
         return
@@ -115,39 +125,41 @@ async def urban_dictionary_response(message):
         definition = urban_dictionary.get_first_ud_definition(search_term)
     except Exception as e:
         logger.exception(e)
-        logger.info('Could not get ud response!')
-        await message.channel.send("I've failed to get the definition! Check my error logs.")
+        logger.info("Could not get ud response!")
+        await message.channel.send(
+            "I've failed to get the definition! Check my error logs."
+        )
         return
-    if definition == '':
-        await message.channel.send('Sorry, no results for that term.')
+    if definition == "":
+        await message.channel.send("Sorry, no results for that term.")
         return
     await message.channel.send(definition)
 
 
 async def weather_response(message):
-        try:
-            zip_code = message.content.split()[1]
-        except IndexError:
-            await message.channel.send("I need an american zip code.")
-            return
-        if not zip_code.isdigit():
-            await message.channel.send("That does not look like a zip code!")
-            return
-        try:
-            response = weather.get_weather_response(zip_code)
-        except Exception as e:
-            logger.exception(e)
-            logger.info('Sorry, an error occurred. Could not get weather data!')
-            await message.channel.send("Somethings not right... Please check error logs!")
-            return
-        try:
-            parsed_response = weather.parse_weather_response(response)
-        except KeyError as e:
-            logger.exception(e)
-            logger.info('Could not parse weather data!')
-            await message.channel.send("That zip code didn't work for me. Is it valid?")
-            return
-        await message.channel.send(parsed_response)
+    try:
+        zip_code = message.content.split()[1]
+    except IndexError:
+        await message.channel.send("I need an american zip code.")
+        return
+    if not zip_code.isdigit():
+        await message.channel.send("That does not look like a zip code!")
+        return
+    try:
+        response = weather.get_weather_response(zip_code)
+    except Exception as e:
+        logger.exception(e)
+        logger.info("Sorry, an error occurred. Could not get weather data!")
+        await message.channel.send("Somethings not right... Please check error logs!")
+        return
+    try:
+        parsed_response = weather.parse_weather_response(response)
+    except KeyError as e:
+        logger.exception(e)
+        logger.info("Could not parse weather data!")
+        await message.channel.send("That zip code didn't work for me. Is it valid?")
+        return
+    await message.channel.send(parsed_response)
 
 
 async def nietzsche_response(message):
@@ -157,30 +169,30 @@ async def nietzsche_response(message):
 
 async def random_markov_response(message):
     try:
-        sentences = u''
+        sentences = u""
         random_dt = random_date(message.channel)
         async for log in message.channel.history(limit=2000, after=random_dt):
-            sentences += log.clean_content + '\n'
+            sentences += log.clean_content + "\n"
         text_model = markovify.Text(sentences)
         s = text_model.make_short_sentence(280, tries=50)
         if not s or not len(s) > 0:
             s = "'" + random_data_quote() + "'" + " [insufficient data]"
-        await message.add_reaction('🤖')
+        await message.add_reaction("🤖")
         await message.channel.send(s)
     except Exception as e:
         logger.info("ERROR!: {}".format(e))
-        logger.error("Shat self: {}".format(e))           
+        logger.error("Shat self: {}".format(e))
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
 
 async def user_markov_response(message):
     user = message.mentions[0]
-    logger.info('found user {} for bottalk command'.format(user))
-    sentences = u''
+    logger.info("found user {} for bottalk command".format(user))
+    sentences = u""
     random_dt = random_date(message.channel)
     async for log in message.channel.history(limit=2000, after=random_dt):
         if log.author == user:
-            sentences += log.clean_content + '\n'
+            sentences += log.clean_content + "\n"
     if len(sentences) == 0:
         await message.channel.send("I got nothing 🤷")
         return
@@ -194,8 +206,9 @@ async def user_markov_response(message):
         logger.error("Shat self: {}".format(e))
         await message.channel.send("Sorry, I've just gone and shat myself.")
 
+
 async def headlines_response(message):
-    valid_sections_pretty = ', '.join(nyt.VALID_SECTIONS)
+    valid_sections_pretty = ", ".join(nyt.VALID_SECTIONS)
     err_message = "I need a section. One of: {}".format(valid_sections_pretty)
     try:
         section = message.content.split()[1]
@@ -207,23 +220,27 @@ async def headlines_response(message):
     except nyt.UnknownSectionError:
         await message.channel.send(err_message)
         return
-    logger.info('Sending headlines {}'.format(headlines))
-    m = """Top Three NYT Headlines for section: **{}**\n```* {}\n* {}\n* {}```""".format(section, headlines[0], headlines[1], headlines[2])
+    logger.info("Sending headlines {}".format(headlines))
+    m = """Top Three NYT Headlines for section: **{}**\n```* {}\n* {}\n* {}```""".format(
+        section, headlines[0], headlines[1], headlines[2]
+    )
     await message.channel.send(m)
+
 
 def should_talk():
     # about equal to a three of a kind
     lucky_number = 1
-    roll = random.randint(1,88)
+    roll = random.randint(1, 88)
     return roll == lucky_number
 
-UD_COMMAND = '!ud'
-WEATHER_COMMAND = '!weather'
-NEECHEE_COMMAND = '!neechee'
-TOPIC_COMMAND = '!topic'
-BOTTALK_COMMAND = '!bottalk'
-HEADLINE_COMMAND = '!headlines'
-HELP_COMMAND = '!help'
+
+UD_COMMAND = "!ud"
+WEATHER_COMMAND = "!weather"
+NEECHEE_COMMAND = "!neechee"
+TOPIC_COMMAND = "!topic"
+BOTTALK_COMMAND = "!bottalk"
+HEADLINE_COMMAND = "!headlines"
+HELP_COMMAND = "!help"
 help_message = """
 {ud} <word or phrase> - Get the urban dictionary definition of the word or phrase.
 {weather} <zip-code> - Get weather information from the openweathermap.org API.
@@ -234,7 +251,16 @@ help_message = """
 {help} - Get this message.
 
 Mention me to get words that sound like they're from the current channel.
-""".format(ud=UD_COMMAND, weather=WEATHER_COMMAND, neechee=NEECHEE_COMMAND, topic=TOPIC_COMMAND, bottalk=BOTTALK_COMMAND, headline=HEADLINE_COMMAND, help=HELP_COMMAND)
+""".format(
+    ud=UD_COMMAND,
+    weather=WEATHER_COMMAND,
+    neechee=NEECHEE_COMMAND,
+    topic=TOPIC_COMMAND,
+    bottalk=BOTTALK_COMMAND,
+    headline=HEADLINE_COMMAND,
+    help=HELP_COMMAND,
+)
+
 
 @client.event
 async def on_message(message):
@@ -252,7 +278,7 @@ async def on_message(message):
         if message.channel.topic:
             await message.channel.send(message.channel.topic)
         else:
-            await message.channel.send('This channel is without a topic.')
+            await message.channel.send("This channel is without a topic.")
     if message.content.startswith(HEADLINE_COMMAND):
         await headlines_response(message)
     if client.user.mentioned_in(message):
@@ -264,5 +290,5 @@ async def on_message(message):
 
 
 # TODO: Add message to alert user on start/restart
-logger.info('Starting up!')
-client.run(os.environ['DISCO_TOKEN'])
+logger.info("Starting up!")
+client.run(os.environ["DISCO_TOKEN"])
