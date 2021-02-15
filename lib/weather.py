@@ -67,9 +67,13 @@ def parse_weather_response(json_dict):
                 "value": str(k_to_f(current_temp)) + "F",
                 "inline": True,
             },
-            {"name": "High", "value": str(k_to_f(high_temp)) + "F"},
+            {"name": "High", "value": str(k_to_f(high_temp)) + "F", "inline": True},
             {"name": "Low", "value": str(k_to_f(low_temp)) + "F", "inline": True},
-            {"name": "Feels Like", "value": str(k_to_f(feels_like)) + "F"},
+            {
+                "name": "Feels Like",
+                "value": str(k_to_f(feels_like)) + "F",
+                "inline": True,
+            },
             {"name": "Humidity", "value": str(humidity) + "%", "inline": True},
         ],
         "author": {
