@@ -43,23 +43,23 @@ def parse_weather_response(json_dict):
         "low_temp": k_to_f(low_temp),
     }
     embed_data = {
-        title: "Current Weather Data",
-        embed_type: "rich",
-        description: "https://openweathermap.org/city/{place_id}".format(
+        "title": "Current Weather Data",
+        "type": "rich",
+        "description": "https://openweathermap.org/city/{place_id}".format(
             place_id=place_id
         ),
-        url: "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
-        timestamp: datetime.datetime.now().isoformat(),
-        color: 0xEB6E4B,
-        provider: {name: "Open Weather", url: "https://openweathermap.org"},
-        image: {
-            url: "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
+        "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
+        "timestamp": datetime.datetime.now().isoformat(),
+        "color": discord.Color.dark_gold(),
+        "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
+        "image: {
+            "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
                 icon_id=icon_id
             ),
-            height: 100,
-            width: 100,
+            "height": 100,
+            "width": 100,
         },
-        fields: [
+        "fields": [
             {"name": "Conditions", "value": description_string},
             {"name": "Temperature", "value": current_temp},
             {"name": "High", "value": high_temp},
