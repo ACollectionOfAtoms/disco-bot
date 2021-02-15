@@ -84,11 +84,7 @@ async def on_ready():
             logger.info("attempting to update role...")
             coroutines.append(change_role_colour(g))
         coroutines.append(
-            client.change_presence(
-                activity=discord.Game(
-                    name="Hatoful Boyfriend: A School of Hope and White Wings"
-                )
-            )
+            client.change_presence(activity=discord.Game(name="The Sims 4"))
         )
     except Exception as e:
         logger.exception(e)
