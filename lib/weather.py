@@ -39,6 +39,8 @@ def parse_weather_response(json_dict):
     icon_url = "http://openweathermap.org/img/wn/{icon_id}@2x.png".format(
         icon_id=icon_id
     )
+    time_of_calc = json_dict["dt"]
+    time_stamp = datetime.datetime.fromtimestamp(time_of_calc).isoformat()
     parsed_data = {
         "name": place_name,
         "description": description_string,
@@ -59,6 +61,7 @@ def parse_weather_response(json_dict):
             "height": 100,
             "width": 100,
         },
+        "timestamp": time_stamp,
         "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
         "fields": [
             {"name": "Conditions", "value": description_string},
