@@ -51,7 +51,6 @@ def parse_weather_response(json_dict):
         "type": "rich",
         "description": "{p}".format(p=place_name),
         "url": "https://openweathermap.org/city/{place_id}".format(place_id=place_id),
-        "timestamp": datetime.datetime.now().isoformat(),
         "color": 0xEB6E4B,
         "thumbnail": {
             "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
@@ -68,8 +67,9 @@ def parse_weather_response(json_dict):
             {"name": "Low", "value": str(k_to_f(low_temp)) + "F"},
             {"name": "Feels Like", "value": str(k_to_f(feels_like)) + "F"},
         ],
-        "footer": {
-            "text": "Open Weather API",
+        "author": {
+            "name": "Open Weather API",
+            "url": "https://openweathermap.org",
             "icon_url": "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png",
         },
     }
