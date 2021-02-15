@@ -62,10 +62,15 @@ def parse_weather_response(json_dict):
         "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
         "fields": [
             {"name": "Conditions", "value": description_string},
-            {"name": "Currently", "value": str(k_to_f(current_temp)) + "F"},
+            {
+                "name": "Currently",
+                "value": str(k_to_f(current_temp)) + "F",
+                "inline": True,
+            },
             {"name": "High", "value": str(k_to_f(high_temp)) + "F"},
-            {"name": "Low", "value": str(k_to_f(low_temp)) + "F"},
+            {"name": "Low", "value": str(k_to_f(low_temp)) + "F", "inline": True},
             {"name": "Feels Like", "value": str(k_to_f(feels_like)) + "F"},
+            {"name": "Humidity", "value": humidity + "%", "inline": True},
         ],
         "author": {
             "name": "Open Weather API",
