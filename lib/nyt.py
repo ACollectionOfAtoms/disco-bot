@@ -47,7 +47,6 @@ def get_headlines_response(section):
     if section not in VALID_SECTIONS:
         raise UnknownSectionError()
     uri = "{}/{}.json?api-key={}".format(NYT_URL, section, NYT_KEY)
-    logger.info("using uri: {}".format(uri))
     resp = requests.get(uri)
     response_json = resp.json()
     if response_json["status"] != "OK":
@@ -56,7 +55,6 @@ def get_headlines_response(section):
 
 
 def parse_first_three_titles(nyt_resp):
-    logger.info("parsing using results {}".format(nyt_resp))
     results = nyt_resp["results"]
     first_three = results[:3]
     titles = [a["title"] for a in first_three]
