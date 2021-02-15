@@ -68,6 +68,10 @@ def parse_weather_response(json_dict):
             {"name": "Low", "value": str(k_to_f(low_temp)) + "F"},
             {"name": "Feels Like", "value": str(k_to_f(feels_like)) + "F"},
         ],
+        "footer": {
+            "text": "Open Weather API",
+            "icon_url": "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png",
+        },
     }
     embed = discord.Embed.from_dict(embed_data)
     logger.info("Sending embed {embed}".format(embed=embed))
