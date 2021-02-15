@@ -97,7 +97,7 @@ def parse_weather_response(json_dict):
         "author": {
             "name": "Open Weather API",
             "url": "https://openweathermap.org",
-            "icon_url": "https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png",
+            "icon_url": "https://pbs.twimg.com/profile_images/1173919481082580992/f95OeyEW_400x400.jpg",
         },
     }
     embed = discord.Embed.from_dict(embed_data)
