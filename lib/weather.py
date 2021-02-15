@@ -52,7 +52,7 @@ def parse_weather_response(json_dict):
         "timestamp": datetime.datetime.now().isoformat(),
         "color": discord.Color.dark_gold(),
         "provider": {"name": "Open Weather", "url": "https://openweathermap.org"},
-        "image: {
+        "image": {
             "url": "https://openweathermap.org/img/wn/{icon_id}@2x.png".format(
                 icon_id=icon_id
             ),
