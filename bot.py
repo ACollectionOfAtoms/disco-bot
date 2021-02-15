@@ -264,29 +264,37 @@ Mention me to get words that sound like they're from the current channel.
 
 @client.event
 async def on_message(message):
-    async with message.channel.typing():
-        if message.author == client.user:
-            return
-        if message.content.startswith(HELP_COMMAND):
+    if message.author == client.user:
+        return
+    if message.content.startswith(HELP_COMMAND):
+        async with message.channel.typing():
             await message.channel.send(help_message)
-        if message.content.startswith(UD_COMMAND):
+    if message.content.startswith(UD_COMMAND):
+        async with message.channel.typing():
             await urban_dictionary_response(message)
-        if message.content.startswith(WEATHER_COMMAND):
+    if message.content.startswith(WEATHER_COMMAND):
+        async with message.channel.typing():
             await weather_response(message)
-        if message.content.startswith(NEECHEE_COMMAND):
+    if message.content.startswith(NEECHEE_COMMAND):
+        async with message.channel.typing():
             await nietzsche_response(message)
-        if message.content.startswith(TOPIC_COMMAND):
+    if message.content.startswith(TOPIC_COMMAND):
+        async with message.channel.typing():
             if message.channel.topic:
                 await message.channel.send(message.channel.topic)
             else:
                 await message.channel.send("This channel is without a topic.")
-        if message.content.startswith(HEADLINE_COMMAND):
+    if message.content.startswith(HEADLINE_COMMAND):
+        async with message.channel.typing():
             await headlines_response(message)
-        if client.user.mentioned_in(message):
+    if client.user.mentioned_in(message):
+        async with message.channel.typing():
             await random_markov_response(message)
-        if message.content.startswith(BOTTALK_COMMAND):
+    if message.content.startswith(BOTTALK_COMMAND):
+        async with message.channel.typing():
             await user_markov_response(message)
-        if should_talk():
+    if should_talk():
+        async with message.channel.typing():
             await random_markov_response(message)
 
 
