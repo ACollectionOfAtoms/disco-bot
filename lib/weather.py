@@ -72,5 +72,5 @@ def parse_weather_response(json_dict):
         ],
     }
     embed = discord.Embed.from_dict(embed_data)
-    logger.info("Sending embed {embed}".format(embed))
+    logger.info("Sending embed {embed}".format(embed=embed))
     return embed
