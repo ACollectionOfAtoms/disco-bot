@@ -134,7 +134,7 @@ async def urban_dictionary_response(message):
 
 async def weather_response(message):
     try:
-        weather_locale_identifier = message.content.split()[1]
+        weather_locale_identifier = " ".join(message.content.split()[1:])
     except IndexError:
         await message.channel.send("Please supply a zip code or city name.")
         return
