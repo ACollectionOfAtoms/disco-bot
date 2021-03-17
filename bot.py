@@ -237,6 +237,7 @@ def should_talk():
 
 UD_COMMAND = "!ud"
 WEATHER_COMMAND = "!weather"
+WEATHER_COMMAND_SHORT = "!w"
 NEECHEE_COMMAND = "!neechee"
 TOPIC_COMMAND = "!topic"
 BOTTALK_COMMAND = "!bottalk"
@@ -273,7 +274,9 @@ async def on_message(message):
     if message.content.startswith(UD_COMMAND):
         async with message.channel.typing():
             await urban_dictionary_response(message)
-    if message.content.startswith(WEATHER_COMMAND):
+    if message.content.startswith(WEATHER_COMMAND) or message.content.startswith(
+        WEATHER_COMMAND_SHORT
+    ):
         logger.info("sending weather data...")
         async with message.channel.typing():
             await weather_response(message)
