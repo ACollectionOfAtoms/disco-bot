@@ -8,10 +8,18 @@ WEATHER_URI = "http://api.openweathermap.org/data/2.5/weather"
 WEATHER_ENDPOINT = "{}?appid={}".format(WEATHER_URI, WEATHER_API_KEY)
 
 
+class NotFoundError(Exception):
+    pass
+
+
 def get_weather_response(zip_code):
     uri = "{}&q={},us&units={}".format(WEATHER_ENDPOINT, zip_code, "imperial")
     resp = requests.get(uri)
-    return resp.json()
+    if resp.status_code == 200:
+        return resp.json()
+    if resp.status_code == 404:
+        raise NotFoundError
+    resp.raise_for_status()
 
 
 # stolen from: https://stackoverflow.com/a/7490772

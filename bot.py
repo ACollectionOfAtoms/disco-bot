@@ -134,15 +134,17 @@ async def urban_dictionary_response(message):
 
 async def weather_response(message):
     try:
-        zip_code = message.content.split()[1]
+        weather_locale_identifier = message.content.split()[1]
     except IndexError:
-        await message.channel.send("I need an american zip code.")
-        return
-    if not zip_code.isdigit():
-        await message.channel.send("That does not look like a zip code!")
+        await message.channel.send("Please supply a zip code or city name.")
         return
     try:
-        response = weather.get_weather_response(zip_code)
+        response = weather.get_weather_response(weather_locale_identifier)
+    except weather.NotFoundError:
+        await message.channel.send(
+            "Sorry, unable to find a location with that zip or city name."
+        )
+        return
     except Exception as e:
         logger.exception(e)
         logger.info("Sorry, an error occurred. Could not get weather data!")
