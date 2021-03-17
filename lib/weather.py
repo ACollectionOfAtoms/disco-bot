@@ -12,8 +12,8 @@ class NotFoundError(Exception):
     pass
 
 
-def get_weather_response(zip_code):
-    uri = "{}&q={},us&units={}".format(WEATHER_ENDPOINT, zip_code, "imperial")
+def get_weather_response(zip_or_city_name):
+    uri = "{}&q={}&units={}".format(WEATHER_ENDPOINT, zip_or_city_name, "imperial")
     resp = requests.get(uri)
     if resp.status_code == 200:
         return resp.json()
