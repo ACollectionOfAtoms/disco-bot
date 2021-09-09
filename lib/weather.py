@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import datetime
 import discord
@@ -13,6 +14,9 @@ class NotFoundError(Exception):
 
 
 def get_weather_response(zip_or_city_name):
+    has_comma = re.search(".*,.*", zip_or_city_name)
+    if not has_comma:
+        zip_or_city_name += ",us"
     uri = "{}&q={}&units={}".format(WEATHER_ENDPOINT, zip_or_city_name, "imperial")
     resp = requests.get(uri)
     if resp.status_code == 200:
