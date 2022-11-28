@@ -229,9 +229,9 @@ async def headlines_response(message):
 
 
 def should_talk():
-    # about equal to a three of a kind
+    # about equal to a straight 
     lucky_number = 1
-    roll = random.randint(1, 88)
+    roll = random.randint(1, 251)
     return roll == lucky_number
 
 
