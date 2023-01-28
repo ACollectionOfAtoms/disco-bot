@@ -115,40 +115,40 @@ async def urban_dictionary_response(message):
     try:
         search_term = " ".join(message.content.split()[1:])
     except IndexError:
-        await message.channel.send("I need a search term.")
+        await message.reply("I need a search term.")
         return
     try:
         definition = urban_dictionary.get_first_ud_definition(search_term)
     except Exception as e:
         logger.exception(e)
         logger.info("Could not get ud response!")
-        await message.channel.send(
+        await message.reply(
             "I've failed to get the definition! Check my error logs."
         )
         return
     if definition == "":
-        await message.channel.send("Sorry, no results for that term.")
+        await message.reply("Sorry, no results for that term.")
         return
-    await message.channel.send(definition)
+    await message.reply(definition)
 
 
 async def weather_response(message):
     try:
         weather_locale_identifier = " ".join(message.content.split()[1:])
     except IndexError:
-        await message.channel.send("Please supply a zip code or city name.")
+        await message.reply("Please supply a zip code or city name.")
         return
     try:
         response = weather.get_weather_response(weather_locale_identifier)
     except weather.NotFoundError:
-        await message.channel.send(
+        await message.reply(
             "Sorry, unable to find a location with that zip or city name."
         )
         return
     except Exception as e:
         logger.exception(e)
         logger.info("Sorry, an error occurred. Could not get weather data!")
-        await message.channel.send("Somethings not right... Please check error logs!")
+        await message.reply("Somethings not right... Please check error logs!")
         return
     try:
         logger.info("parsing weather data...")
@@ -156,16 +156,16 @@ async def weather_response(message):
     except Exception as e:
         logger.exception(e)
         logger.info("Could not parse weather data!")
-        await message.channel.send(
+        await message.reply(
             "Sorry, shat myself while trying to show weather data. Ask Adam to fix it."
         )
         return
-    await message.channel.send(embed=parsed_response)
+    await message.reply(embed=parsed_response)
 
 
 async def nietzsche_response(message):
     quote = nietzsche.QUOTES[random.randint(0, len(nietzsche.QUOTES) - 1)]
-    await message.channel.send(quote)
+    await message.reply(quote)
 
 
 async def random_markov_response(message):
@@ -179,7 +179,7 @@ async def random_markov_response(message):
         if not s or not len(s) > 0:
             s = "'" + random_data_quote() + "'" + " [insufficient data]"
         await message.add_reaction("🤖")
-        await message.channel.send(s)
+        await message.reply(s)
     except Exception as e:
         logger.info("ERROR!: {}".format(e))
         logger.error("Shat self: {}".format(e))
@@ -195,17 +195,17 @@ async def user_markov_response(message):
         if log.author == user:
             sentences += log.clean_content + "\n"
     if len(sentences) == 0:
-        await message.channel.send("I got nothing 🤷")
+        await message.reply("I got nothing 🤷")
         return
     try:
         text_model = markovify.Text(sentences, well_formed=False)
         s = text_model.make_short_sentence(400, tries=100)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
-        await message.channel.send(s)
+        await message.reply(s)
     except Exception as e:
         logger.error("Shat self: {}".format(e))
-        await message.channel.send("Sorry, I've just gone and shat myself.")
+        await message.reply("Sorry, I've just gone and shat myself.")
 
 
 async def headlines_response(message):
@@ -270,7 +270,7 @@ async def on_message(message):
         return
     if message.content.startswith(HELP_COMMAND):
         async with message.channel.typing():
-            await message.channel.send(help_message)
+            await message.reply(help_message)
     if message.content.startswith(UD_COMMAND):
         async with message.channel.typing():
             await urban_dictionary_response(message)
@@ -286,9 +286,9 @@ async def on_message(message):
     if message.content.startswith(TOPIC_COMMAND):
         async with message.channel.typing():
             if message.channel.topic:
-                await message.channel.send(message.channel.topic)
+                await message.reply(message.channel.topic)
             else:
-                await message.channel.send("This channel is without a topic.")
+                await message.reply("This channel is without a topic.")
     if message.content.startswith(HEADLINE_COMMAND):
         async with message.channel.typing():
             await headlines_response(message)
