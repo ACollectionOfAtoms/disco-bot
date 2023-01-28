@@ -17,4 +17,6 @@ QUOTES = [
     "I have forgotten my umbrella.",
     "God is dead! God remains dead! And we have killed him.",
     "Which is it: is man one of God's blunders, or is God one of man's blunders?",
+    "All things are subject to interpretation whichever interpretation prevails at a given time is a function of power and not truth.",
+    "A lie gets halfway around the world before the truth has a chance to get its pants on."
 ]

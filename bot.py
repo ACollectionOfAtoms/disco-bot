@@ -29,6 +29,12 @@ data_quotes = [
     "I have to set an example, now more than ever. Facing death is the ultimate test of character. – Cmdr. William Riker",
     'The arbiter of a demanding wargame rendered the word "mismatch" as "challenge" in his language.',
     "My positronic brain has several layers of shielding to protect me from power surges. It would be possible for you to remove my cranial unit and take it with you.",
+    "Yes, sir. I am attempting to fill a silent moment with non-relevant conversation.",
+    "It is the struggle itself that is most important. We must strive to be more than we are. It does not matter that we will never reach our ultimate goal. The effort yields its own rewards.",
+    "I want to live, however briefly, knowing that my life is finite. Mortality gives meaning to human life. Peace, love, friendship. These are precious because we know they cannot endure. A butterfly that lives forever is really not a butterfly at all.",
+    "Could you please continue the petty bickering? I find it most intriguing.",
+    "I am superior, sir, in many ways, but I would gladly give it up to be human.",
+    "In the event of a water landing, I have been designed to serve as a flotation device."
 ]
 
 
