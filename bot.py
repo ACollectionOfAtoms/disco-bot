@@ -191,7 +191,7 @@ async def user_markov_response(message):
     logger.info("found user {} for bottalk command".format(user))
     sentences = u""
     random_dt = random_date(message.channel)
-    async for log in message.channel.history(limit=10000, after=random_dt):
+    async for log in message.channel.history(limit=6000, after=random_dt):
         if log.author == user:
             sentences += log.clean_content + "\n"
     if len(sentences) == 0:
