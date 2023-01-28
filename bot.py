@@ -191,7 +191,7 @@ async def user_markov_response(message):
     logger.info("found user {} for bottalk command".format(user))
     sentences = u""
     random_dt = random_date(message.channel)
-    async for log in message.channel.history(limit=2000, after=random_dt):
+    async for log in message.channel.history(limit=6000, after=random_dt):
         if log.author == user:
             sentences += log.clean_content + "\n"
     if len(sentences) == 0:
@@ -199,7 +199,7 @@ async def user_markov_response(message):
         return
     try:
         text_model = markovify.Text(sentences, well_formed=False)
-        s = text_model.make_short_sentence(300, tries=50)
+        s = text_model.make_short_sentence(400, tries=100)
         if not s or len(s) < 1:
             s = "My apologies, I cannot quite grasp the essence of that user."
         await message.channel.send(s)
